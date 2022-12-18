@@ -1,6 +1,5 @@
-import FilePathResponseStatus from "../enums/FilePathResponseStatus";
+import IMessage from "./IMessage";
 
-export default interface IFilePathResponse {
-    status: FilePathResponseStatus
-    filePath: string,
+export default interface IFilePathResponse extends IMessage {
+    filePath: string
 }

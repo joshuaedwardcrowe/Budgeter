@@ -16,10 +16,13 @@ createApp({
     }),
     methods: {
         askForSpendeeExport: async () => {
-            controllers.storage.askForFilePath("Spendee Export");
-            const filePath = await controllers.storage.waitForFilePath();
-            console.log(`FILE PATH:`);
+            controllers.app.askForFilePath("Spendee Export");
+            const filePath = await controllers.app.waitForFilePath();
             console.log(filePath);
+
+            controllers.storage.askForFileContent(filePath);
+            const fileContent = await controllers.storage.waitForFileContent();
+            console.log(fileContent);
         }
     }
 }).mount('#vue-app');

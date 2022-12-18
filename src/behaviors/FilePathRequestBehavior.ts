@@ -1,20 +1,16 @@
-import {OpenDialogOptions, OpenDialogReturnValue} from "electron";
+import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
 import os from "os";
+import * as constants from "../constants";
 import WindowModule from "../modules/WindowModule";
 import IFilePathRequest from "../models/IFilePathRequest";
 import IFilePathResponse from "../models/IFilePathResponse";
-import FilePathResponseStatus from "../enums/FilePathResponseStatus";
-import * as constants from "../constants";
-import IpcRendererEvent = Electron.IpcRendererEvent;
 
 const HOME_DIR = os.homedir();
 
-export default async function (event: IpcRendererEvent, request: IFilePathRequest) {
-
+export default async function (request: IFilePathRequest) {
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(
             constants.TEMPLATE_REASON_FOR_FILE,
             request.reasonForFile);
-    console.log(reasonForFile);
 
     const openFileOptions: OpenDialogOptions = {
         title: reasonForFile,
@@ -28,18 +24,18 @@ export default async function (event: IpcRendererEvent, request: IFilePathReques
 
     if (result.canceled) {
         const message: IFilePathResponse = {
-            status: FilePathResponseStatus.NotLocated,
+            success: false,
             filePath: null
         };
 
-        WindowModule.window.webContents.send(constants.IPC_FILE_PATH_NOT_LOCATED, message);
+        WindowModule.window.webContents.send(constants.IPC_FILE_PATH_NOT_FAILURE_RESPONSE, message);
         return;
     }
 
     const message: IFilePathResponse = {
-        status: FilePathResponseStatus.Located,
+        success: true,
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_PATH_LOCATED, message);
+    WindowModule.window.webContents.send(constants.IPC_FILE_PATH_SUCCESS_RESPONSE, message);
 }

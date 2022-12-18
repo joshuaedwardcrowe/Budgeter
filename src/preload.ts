@@ -4,7 +4,8 @@ import * as constants from "./constants";
 import IpcRendererEvent = Electron.IpcRendererEvent;
 import IFilePathRequest from "./models/IFilePathRequest";
 import IFilePathResponse from "./models/IFilePathResponse";
-
+import IFileContentRequest from "./models/IFIleContentRequest";
+import IFileContentResponse from "./models/IFileContentResponse";
 
 function askForFilePath(reasonForFile: string): void {
     const request: IFilePathRequest = { reasonForFile };
@@ -12,17 +13,23 @@ function askForFilePath(reasonForFile: string): void {
 }
 
 async function waitForFilePath(): Promise<string> {
-    const message = await addIpcListener<IFilePathResponse>(constants.IPC_FILE_PATH_LOCATED);
+    const message = await addIpcListener<IFilePathResponse>(constants.IPC_FILE_PATH_SUCCESS_RESPONSE);
     return message.filePath;
+}
+
+function askForFileContent(filePath: string): void {
+    const request: IFileContentRequest = { filePath };
+    ipcRenderer.send(constants.IPC_FILE_CONTENT_REQUEST, request);
+}
+
+async function waitForFileContent(): Promise<string> {
+    const message = await addIpcListener<IFileContentResponse>(constants.IPC_FILE_CONTENT_SUCCESS_RESPONSE)
+    return message.fileContent;
 }
 
 async function addIpcListener<TMessage>(channel: string): Promise<TMessage> {
     return new Promise((resolve, reject) => {
-        console.log(`SETTING UP: ${constants.IPC_FILE_PATH_LOCATED}`);
         ipcRenderer.on(channel, (event: IpcRendererEvent, message: TMessage) => {
-            console.log(`RECEIVED: ${constants.IPC_FILE_PATH_LOCATED}`);
-            console.log("ARGSSSSS");
-            console.log(message);
             if (!message) {
                 reject();
             }
@@ -32,11 +39,13 @@ async function addIpcListener<TMessage>(channel: string): Promise<TMessage> {
     })
 }
 
-
-
 contextBridge.exposeInMainWorld("controllers", {
-    storage: {
+    app: {
         askForFilePath,
         waitForFilePath
+    },
+    storage: {
+        askForFileContent,
+        waitForFileContent
     }
 });
