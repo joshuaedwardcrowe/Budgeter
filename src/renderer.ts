@@ -27,5 +27,17 @@
  */
 
 import './index.css';
+import { createApp } from "vue";
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
+
+createApp({
+    data: () => ({
+        count: 0,
+        messages: [
+            "one",
+            "two",
+            "three"
+        ]
+    })
+}).mount('#vue-app');

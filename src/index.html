@@ -7,5 +7,14 @@
   <body>
     <h1>💖 Hello World!</h1>
     <p>Welcome to your Electron application.</p>
+    <div id="vue-app">
+        <button @click="count++">
+            Count is: {{ count }}
+        </button>
+        <p>Messages</p>
+        <ul>
+            <li v-for="message in messages">{{message}}</li>
+        </ul>
+    </div>
   </body>
 </html>
