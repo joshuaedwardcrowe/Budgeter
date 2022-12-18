@@ -18,11 +18,10 @@ export default class SpendeeParserModule {
         const [accountForename, accountSurname] = accountName.split(constants.SPENDEE_TRANSACTION_EXPORT_ACCOUNT_NAME_SEPARATOR);
 
         const formattedAccountName = toTitleCase(`${accountForename} ${accountSurname}`)
-        const formattedCreated = new Date(created);
 
         return {
             accountName: formattedAccountName,
-            created: formattedCreated
+            created
         }
     }
 
