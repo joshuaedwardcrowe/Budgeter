@@ -2,19 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Budgeter</title>
   </head>
   <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
+    <h1>Budgeter</h1>
     <div id="vue-app">
-        <button @click="count++">
-            Count is: {{ count }}
-        </button>
-        <p>Messages</p>
-        <ul>
-            <li v-for="message in messages">{{message}}</li>
-        </ul>
+        <div v-if="currentBudget !== null">
+            Current Budget
+        </div>
+        <div v-else>
+            <button @click="askForSpendeeExport">Add Audit</button>
+            <table>
+                <tr>
+                    <th>Account</th>
+                    <th>Added</th>
+                    <th>Open</th>
+                </tr>
+                <tr v-for="budget in budgets">
+                    <td>{{budget.account}}</td>
+                    <td>{{budget.added}}</td>
+                    <td>
+                        <button>Open</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
   </body>
 </html>

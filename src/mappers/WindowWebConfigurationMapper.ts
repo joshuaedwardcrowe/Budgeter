@@ -6,6 +6,8 @@ import IWindowWebConfiguration from "../models/IWindowWebConfiguration";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+console.log(`PRELOAD: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
+
 export default class WindowWebConfigurationMapper {
     static fromBudgeterConfiguration(config: IBudgeterConfiguration): IWindowWebConfiguration {
         return {

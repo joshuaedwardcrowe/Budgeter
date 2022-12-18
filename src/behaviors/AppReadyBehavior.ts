@@ -10,6 +10,8 @@ import WindowModule from "../modules/WindowModule";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
+console.log(`URL: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
+
 async function getBudgeterConfiguration(): Promise<IBudgeterConfiguration> {
     try {
         return await ConfigurationModule.getConfiguration();

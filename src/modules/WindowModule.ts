@@ -1,12 +1,8 @@
-import { BrowserWindow, dialog } from 'electron';
+import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import IWindowConfiguration from "../models/IWindowConfiguration";
 
 class WindowModule {
-    windows: Map<string, BrowserWindow>;
-
-    constructor() {
-        this.windows = new Map();
-    }
+    window: BrowserWindow;
 
     getWindows(): BrowserWindow[] {
         return BrowserWindow.getAllWindows();
@@ -17,13 +13,16 @@ class WindowModule {
     }
 
     async createWindow(config: IWindowConfiguration) {
-        const window = new BrowserWindow(config);
-        this.windows.set(config.title, window);
-        return window;
+        this.window = new BrowserWindow(config);
+        return this.window;
     }
 
     showErrorDialog(title: string, content: string): void {
         dialog.showErrorBox(title, content);
+    }
+
+    showOpenFileDialog(configuration: OpenDialogOptions): Promise<OpenDialogReturnValue> {
+        return dialog.showOpenDialog(this.window, configuration);
     }
 }
 

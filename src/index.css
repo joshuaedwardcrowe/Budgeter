@@ -5,3 +5,19 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+table {
+    border: 1px solid black;
+}
+
+tr {
+    border: 1px solid black;
+}
+
+th {
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid black;
+}
