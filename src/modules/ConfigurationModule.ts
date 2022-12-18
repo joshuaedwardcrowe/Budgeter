@@ -11,7 +11,6 @@ const HOME_CONFIG_FILE_PATH = `${HOME_CONFIG_FOLDER_PATH}/${constants.CONFIG_FIL
 
 const DefaultBudgeterConfig: IBudgeterConfiguration = {
     windowTitle: constants.DEFAULT_WINDOW_TITLE,
-    windowIndexFile: constants.DEFAULT_WINDOW_INDEX_FILE,
     windowHeight: constants.DEFAULT_WINDOW_HEIGHT,
     windowWidth: constants.DEFAULT_WINDOW_WIDTH,
     nodeIntegration: constants.DEFAULT_WINDOW_NODE_INTEGRATION,

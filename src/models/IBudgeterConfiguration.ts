@@ -1,6 +1,5 @@
 export default interface IBudgeterConfiguration {
     windowTitle: string,
-    windowIndexFile: string,
     windowHeight: number,
     windowWidth: number,
     
