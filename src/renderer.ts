@@ -21,7 +21,7 @@ createApp({
             controllers.storage.askForHomeDirectoryPath();
             const homeDirectoryPath = await controllers.storage.waitForHomeDirectoryPath();
 
-            const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${exportInfo.created}`;
+            const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${exportInfo.created}.csv`;
             console.log(exportSaveDirectoryPath);
 
             controllers.storage.askForFileContent(filePath);
