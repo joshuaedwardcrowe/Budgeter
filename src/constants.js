@@ -26,3 +26,8 @@ export const FAILED_CONFIG_ERROR_MESSAGE = "Budgeter failed to either retrieve o
 
 export const TEMPLATE_REASON_FOR_FILE = "{{reasonForFile}}";
 export const TEXT_SELECT_FILE = `Select ${TEMPLATE_REASON_FOR_FILE} File`;
+
+export const SPENDEE_TRANSACTION_EXPORT_FILE_NAME_SEPARATOR = "_";
+export const SPENDEE_TRANSACTION_EXPORT_ACCOUNT_NAME_SEPARATOR = "-";
+export const SPENDEE_TRANSACTION_EXPORT_FILE_PREFIX = "transactions_export_";
+export const SPENDEE_TRANSACTION_EXPORT_FILE_SUFFIX = ".csv";

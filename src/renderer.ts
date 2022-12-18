@@ -1,28 +1,24 @@
 
 import './index.css';
 import { createApp } from "vue";
+import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
 
 createApp({
     data: () => ({
         currentBudget: null,
-        budgets: [
-            {
-                account: "Monzo Premium",
-                added: "2022-12-08"
-            }
-        ]
+        budgets: []
     }),
     methods: {
-        askForSpendeeExport: async () => {
+        async askForSpendeeExport() {
+            console.clear();
             controllers.app.askForFilePath("Spendee Export");
             const filePath = await controllers.app.waitForFilePath();
-            console.log(filePath);
 
-            controllers.storage.askForFileContent(filePath);
-            const fileContent = await controllers.storage.waitForFileContent();
-            console.log(fileContent);
+            const exportInfo = SpendeeParserModule.parseExportInfo(filePath);
+            console.log(exportInfo);
+            this.budgets = [exportInfo, ...this.budgets]
         }
     }
 }).mount('#vue-app');
