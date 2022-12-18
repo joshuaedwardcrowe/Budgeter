@@ -2,19 +2,29 @@
 import { ipcRenderer, contextBridge } from "electron";
 import * as constants from "./constants";
 import IpcRendererEvent = Electron.IpcRendererEvent;
-import IFilePathRequest from "./models/IFilePathRequest";
-import IFilePathResponse from "./models/IFilePathResponse";
+import IFilePathPromptRequest from "./models/IFilePathPromptRequest";
+import IFilePathPromptResponse from "./models/IFilePathPromptResponse";
+import IHomeDirectoryPathResponse from "./models/IHomeDirectoryPathResponse";
 import IFileContentRequest from "./models/IFIleContentRequest";
 import IFileContentResponse from "./models/IFileContentResponse";
 
-function askForFilePath(reasonForFile: string): void {
-    const request: IFilePathRequest = { reasonForFile };
-    ipcRenderer.send(constants.IPC_FILE_PATH_REQUEST, request);
+function promptForFilePath(reasonForFile: string): void {
+    const request: IFilePathPromptRequest = { reasonForFile };
+    ipcRenderer.send(constants.IPC_PROMPT_FILE_PATH_REQUEST, request);
 }
 
-async function waitForFilePath(): Promise<string> {
-    const message = await addIpcListener<IFilePathResponse>(constants.IPC_FILE_PATH_SUCCESS_RESPONSE);
+async function waitForPromptedForFilePath(): Promise<string> {
+    const message = await addIpcListener<IFilePathPromptResponse>(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE);
     return message.filePath;
+}
+
+function askForHomeDirectoryPath(): void {
+    ipcRenderer.send(constants.IPC_HOME_DIRECTORY_PATH_REQUEST);
+}
+
+async function waitForHomeDirectoryPath(): Promise<string> {
+    const message = await addIpcListener<IHomeDirectoryPathResponse>(constants.IPC_HOME_DIRECTORY_PATH_SUCCESS_RESPONSE);
+    return message.homeDirectoryPath;
 }
 
 function askForFileContent(filePath: string): void {
@@ -40,11 +50,11 @@ async function addIpcListener<TMessage>(channel: string): Promise<TMessage> {
 }
 
 contextBridge.exposeInMainWorld("controllers", {
-    app: {
-        askForFilePath,
-        waitForFilePath
-    },
     storage: {
+        promptForFilePath,
+        waitForPromptedForFilePath,
+        askForHomeDirectoryPath,
+        waitForHomeDirectoryPath,
         askForFileContent,
         waitForFileContent
     }

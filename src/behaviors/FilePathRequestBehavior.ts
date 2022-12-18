@@ -1,20 +1,18 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import os from "os";
 import * as constants from "../constants";
 import WindowModule from "../modules/WindowModule";
-import IFilePathRequest from "../models/IFilePathRequest";
-import IFilePathResponse from "../models/IFilePathResponse";
+import StorageModule from "../modules/StorageModule";
+import IFilePathPromptRequest from "../models/IFilePathPromptRequest";
+import IFilePathPromptResponse from "../models/IFilePathPromptResponse";
 
-const HOME_DIR = os.homedir();
-
-export default async function (request: IFilePathRequest) {
+export default async function (request: IFilePathPromptRequest) {
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(
             constants.TEMPLATE_REASON_FOR_FILE,
             request.reasonForFile);
 
     const openFileOptions: OpenDialogOptions = {
         title: reasonForFile,
-        defaultPath: `${HOME_DIR}/${constants.ENVIRONMENT_DOWNLOADS_FOLDER}`,
+        defaultPath: `${StorageModule.getHomeDirectoryPath()}/${constants.ENVIRONMENT_DOWNLOADS_FOLDER}`,
         buttonLabel: reasonForFile,
         message: "Idk what this message is",
         properties: ["openFile"]
@@ -23,19 +21,19 @@ export default async function (request: IFilePathRequest) {
     const result: OpenDialogReturnValue = await WindowModule.showOpenFileDialog(openFileOptions);
 
     if (result.canceled) {
-        const message: IFilePathResponse = {
+        const message: IFilePathPromptResponse = {
             success: false,
             filePath: null
         };
 
-        WindowModule.window.webContents.send(constants.IPC_FILE_PATH_NOT_FAILURE_RESPONSE, message);
+        WindowModule.window.webContents.send(constants.IPC_PROMPT_FILE_PATH_NOT_FAILURE_RESPONSE, message);
         return;
     }
 
-    const message: IFilePathResponse = {
+    const message: IFilePathPromptResponse = {
         success: true,
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_PATH_SUCCESS_RESPONSE, message);
+    WindowModule.window.webContents.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message);
 }

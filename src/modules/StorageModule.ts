@@ -1,8 +1,14 @@
 import fs from 'fs/promises';
+import os from "os";
 
 const TEXT_ENCODING = "utf8";
 
 class StorageModule {
+
+    public static getHomeDirectoryPath(): string {
+        return os.homedir();
+    }
+
     public static checkFolderExists(folderPath: string): Promise<boolean> {
         return this._checkFileSystemObjectExists(folderPath);
     }

@@ -12,12 +12,13 @@ createApp({
     }),
     methods: {
         async askForSpendeeExport() {
-            console.clear();
-            controllers.app.askForFilePath("Spendee Export");
-            const filePath = await controllers.app.waitForFilePath();
+            controllers.storage.promptForFilePath("Spendee Export");
+            const filePath = await controllers.storage.waitForPromptedForFilePath();
+
+            controllers.storage.askForHomeDirectoryPath();
+            const homeDirectoryPath = await controllers.storage.waitForHomeDirectoryPath();
 
             const exportInfo = SpendeeParserModule.parseExportInfo(filePath);
-            console.log(exportInfo);
             this.budgets = [exportInfo, ...this.budgets]
         }
     }
