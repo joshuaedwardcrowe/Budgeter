@@ -11,7 +11,19 @@ createApp({
         currentBudget: null,
         budgets: []
     }),
+    mounted: async function() {
+        await this.getExistingSpendeeExports();
+    },
     methods: {
+        async getExistingSpendeeExports() {
+            controllers.storage.askForHomeDirectoryPath();
+            const homeDirectoryPath = await controllers.storage.waitForHomeDirectoryPath();
+
+            const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
+
+            controllers.storage.askForDirectoryContent(exportSaveDirectoryPath);
+            const exportSaveDirectoryContent = await controllers.storage.waitForDirectoryContent();
+        },
         async askForSpendeeExport() {
             controllers.storage.promptForFilePath("Spendee Export");
             const filePath = await controllers.storage.waitForPromptedForFilePath();

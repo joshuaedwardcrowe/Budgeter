@@ -5,8 +5,16 @@ const TEXT_ENCODING = "utf8";
 
 class StorageModule {
 
+    public static checkDirectoryExists(directoryPath: string): Promise<boolean> {
+        return this._checkFileSystemObjectExists(directoryPath);
+    }
+
     public static getHomeDirectoryPath(): string {
         return os.homedir();
+    }
+
+    public static async readDirectoryContent(directoryPath: string): Promise<string[]> {
+        return fs.readdir(directoryPath);
     }
 
     public static checkFolderExists(folderPath: string): Promise<boolean> {

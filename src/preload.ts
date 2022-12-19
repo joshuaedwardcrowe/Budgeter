@@ -1,7 +1,5 @@
 // See the Electron documentation for details on how to use preload scripts:
-import { ipcRenderer, contextBridge } from "electron";
-import * as constants from "./constants";
-import IpcRendererEvent = Electron.IpcRendererEvent;
+import { ipcRenderer, contextBridge, IpcRendererEvent } from "electron";
 import IFilePathPromptRequest from "./models/IFilePathPromptRequest";
 import IFilePathPromptResponse from "./models/IFilePathPromptResponse";
 import IHomeDirectoryPathResponse from "./models/IHomeDirectoryPathResponse";
@@ -9,6 +7,9 @@ import IFileContentRequest from "./models/IFIleContentRequest";
 import IFileContentResponse from "./models/IFileContentResponse";
 import IFileCreationRequest from "./models/IFileCreationRequest";
 import IFileCreationResponse from "./models/IFileCreationResponse";
+import * as constants from "./constants";
+import IDirectoryContentRequest from "./models/directory/IDirectoryContentRequest";
+import IDirectoryContentResponse from "./models/directory/IDirectoryContentResponse";
 
 function promptForFilePath(reasonForFile: string): void {
     const request: IFilePathPromptRequest = { reasonForFile };
@@ -27,6 +28,16 @@ function askForHomeDirectoryPath(): void {
 async function waitForHomeDirectoryPath(): Promise<string> {
     const message = await addIpcListener<IHomeDirectoryPathResponse>(constants.IPC_HOME_DIRECTORY_PATH_SUCCESS_RESPONSE);
     return message.homeDirectoryPath;
+}
+
+function askForDirectoryContent(directoryPath: string): void {
+    const request: IDirectoryContentRequest = { directoryPath };
+    ipcRenderer.send(constants.IPC_DIRECTORY_CONTENT_REQUEST, request);
+}
+
+async function waitForDirectoryContent(): Promise<string[]> {
+    const response = await addIpcListener<IDirectoryContentResponse>(constants.IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE);
+    return response.directoryContent;
 }
 
 function askForFileContent(filePath: string): void {
@@ -66,6 +77,8 @@ contextBridge.exposeInMainWorld("controllers", {
         waitForPromptedForFilePath,
         askForHomeDirectoryPath,
         waitForHomeDirectoryPath,
+        askForDirectoryContent,
+        waitForDirectoryContent,
         askForFileContent,
         waitForFileContent,
         askForFileCreation,
