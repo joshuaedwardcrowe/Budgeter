@@ -28,8 +28,8 @@ createApp({
             const fileContent = await controllers.storage.waitForFileContent();
             console.log(fileContent);
 
-            // TODO: Create file in Home Directory Budgeter Folder.
-            // TODO: Load all files in Home Directory Budgeter Folder into table.
+            controllers.storage.askForFileCreation(exportSaveDirectoryPath, fileContent);
+            await controllers.storage.waitForFileCreation();
 
             this.budgets = [exportInfo, ...this.budgets]
         }

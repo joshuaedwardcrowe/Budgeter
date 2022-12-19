@@ -7,6 +7,8 @@ import IFilePathPromptResponse from "./models/IFilePathPromptResponse";
 import IHomeDirectoryPathResponse from "./models/IHomeDirectoryPathResponse";
 import IFileContentRequest from "./models/IFIleContentRequest";
 import IFileContentResponse from "./models/IFileContentResponse";
+import IFileCreationRequest from "./models/IFileCreationRequest";
+import IFileCreationResponse from "./models/IFileCreationResponse";
 
 function promptForFilePath(reasonForFile: string): void {
     const request: IFilePathPromptRequest = { reasonForFile };
@@ -37,6 +39,15 @@ async function waitForFileContent(): Promise<string> {
     return message.fileContent;
 }
 
+function askForFileCreation(filePath: string, fileContent: string): void {
+    const request: IFileCreationRequest = { filePath, fileContent };
+    ipcRenderer.send(constants.IPC_FILE_CREATION_REQUEST, request);
+}
+
+async function waitForFileCreation(): Promise<void> {
+   await addIpcListener<IFileCreationResponse>(constants.IPC_FILE_CREATION_SUCCESS_RESPONSE)
+}
+
 async function addIpcListener<TMessage>(channel: string): Promise<TMessage> {
     return new Promise((resolve, reject) => {
         ipcRenderer.on(channel, (event: IpcRendererEvent, message: TMessage) => {
@@ -56,6 +67,8 @@ contextBridge.exposeInMainWorld("controllers", {
         askForHomeDirectoryPath,
         waitForHomeDirectoryPath,
         askForFileContent,
-        waitForFileContent
+        waitForFileContent,
+        askForFileCreation,
+        waitForFileCreation
     }
 });

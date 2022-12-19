@@ -22,6 +22,9 @@ export const IPC_HOME_DIRECTORY_PATH_SUCCESS_RESPONSE = "homeDirectoryPath:succe
 export const IPC_FILE_CONTENT_REQUEST = "fileContent:request";
 export const IPC_FILE_CONTENT_SUCCESS_RESPONSE = "fileContent:response_success";
 export const IPC_FILE_CONTENT_FAILURE_RESPONSE = "fileContent:response_failure";
+export const IPC_FILE_CREATION_REQUEST = "fileCreation:request";
+export const IPC_FILE_CREATION_SUCCESS_RESPONSE = "fileCreation:response_success";
+export const IPC_FILE_CREATION_FAILURE_RESPONSE = "fileCreation:response_failure";
 
 export const FAILED_CONFIG_ERROR_TITLE = "Configuration Loading Failed";
 export const FAILED_CONFIG_ERROR_MESSAGE = "Budgeter failed to either retrieve or create the configuration for this app. Please try running as an administrator, or contact support."
