@@ -10,10 +10,16 @@ function toTitleCase(str: string): string {
 
 export default class SpendeeParserModule {
 
-    static parseExportInfo(filePath: string): ISpendeeExportInfo {
-        const fileName = this._getFileNameFromFilePath(filePath);
-        console.log(`FILE NAME: ${fileName}`);
+    static checkFileIsExport(fileName: string): boolean {
+        return fileName.endsWith(constants.SPENDEE_TRANSACTION_EXPORT_FILE_SUFFIX);
+    }
 
+    static getExportNameFromFileName(fileName: string): string {
+        const indexOfFileSuffix = fileName.indexOf(constants.SPENDEE_TRANSACTION_EXPORT_FILE_SUFFIX);
+        return fileName.substring(0, indexOfFileSuffix)
+    }
+
+    static parseExportInfoFromFileName(fileName: string) {
         const [created, accountName] = fileName.split(constants.SPENDEE_TRANSACTION_EXPORT_FILE_NAME_SEPARATOR);
         const [accountForename, accountSurname] = accountName.split(constants.SPENDEE_TRANSACTION_EXPORT_ACCOUNT_NAME_SEPARATOR);
 
@@ -21,8 +27,14 @@ export default class SpendeeParserModule {
 
         return {
             accountName: formattedAccountName,
-            created
+            created,
+            fileName
         }
+    }
+
+    static parseExportInfoFromFilePath(filePath: string): ISpendeeExportInfo {
+        const fileName = this._getFileNameFromFilePath(filePath);
+        return this.parseExportInfoFromFileName(fileName);
     }
 
     private static _getFileNameFromFilePath(filePath: string): string {

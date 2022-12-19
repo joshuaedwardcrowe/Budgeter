@@ -5,7 +5,7 @@ import WindowAllClosedBehavior from "./behaviors/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/AppActivateBehavior";
 import FilePathRequestBehavior from "./behaviors/FilePathRequestBehavior";
 import HomeDirectoryPathRequestBehavior from "./behaviors/HomeDirectoryPathRequestBehavior";
-import FileContentRequestBehavior from "./behaviors/FileContentRequestBehavior";
+import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
 import FileCreationRequestBehavior from "./behaviors/FileCreationRequestBehavior";
 import DirectoryContentRequestBehavior from "./behaviors/directory/DirectoryContentRequestBehavior";
 

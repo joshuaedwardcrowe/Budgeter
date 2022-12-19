@@ -1,10 +1,8 @@
-import StorageModule from "../modules/StorageModule";
-import WindowModule from "../modules/WindowModule";
-
-import IFileContentRequest from "../models/IFIleContentRequest";
-
-import * as constants from "../constants";
-import IFileContentResponse from "../models/IFileContentResponse";
+import StorageModule from "../../modules/StorageModule";
+import WindowModule from "../../modules/WindowModule";
+import IFileContentRequest from "../../models/file/IFIleContentRequest";
+import IFileContentResponse from "../../models/file/IFileContentResponse";
+import * as constants from "../../constants";
 
 function sendContentFailureResponse() {
     const message: IFileContentResponse = {
