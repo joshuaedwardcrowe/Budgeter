@@ -39,5 +39,5 @@ export default async function (request: IFileContentRequest) {
         fileContent
     };
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_CONTENT_SUCCESS_RESPONSE, message);
+    WindowModule.send(constants.IPC_FILE_CONTENT_SUCCESS_RESPONSE, message);
 }

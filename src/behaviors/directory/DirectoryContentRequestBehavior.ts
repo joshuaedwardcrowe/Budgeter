@@ -40,5 +40,5 @@ export default async function (request: IDirectoryContentRequest) {
      };
 
      // TODO: Reduce this call.
-     WindowModule.window.webContents.send(constants.IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, response);
+     WindowModule.send(constants.IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, response);
 }

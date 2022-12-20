@@ -1,14 +1,11 @@
-// See the Electron documentation for details on how to use preload scripts:
 import { ipcRenderer, contextBridge, IpcRendererEvent } from "electron";
-import IFilePathPromptRequest from "./models/IFilePathPromptRequest";
-import IFilePathPromptResponse from "./models/IFilePathPromptResponse";
-import IHomeDirectoryPathResponse from "./models/IHomeDirectoryPathResponse";
+import IResponse from "./models/IResponse";
+import IFilePathPromptRequest from "./models/file/IFilePathPromptRequest";
+import IFilePathPromptResponse from "./models/file/IFilePathPromptResponse";
+import IHomeDirectoryPathResponse from "./models/directory/IHomeDirectoryPathResponse";
 import IFileContentRequest from "./models/file/IFIleContentRequest";
 import IFileContentResponse from "./models/file/IFileContentResponse";
-import IManyFileContentRequest from "./models/file/IManyFileContentRequest";
-import IManyFileContentResponse from "./models/file/IManyFileContentResponse";
-import IFileCreationRequest from "./models/IFileCreationRequest";
-import IFileCreationResponse from "./models/IFileCreationResponse";
+import IFileCreationRequest from "./models/file/IFileCreationRequest";
 import IDirectoryContentRequest from "./models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "./models/directory/IDirectoryContentResponse";
 import * as constants from "./constants";
@@ -52,27 +49,13 @@ async function waitForFileContent(): Promise<string> {
     return message.fileContent;
 }
 
-function askForManyFileContent(filePaths: string[]): void {
-    const fileContentRequests = filePaths.map<IFileContentRequest>(filePath => ({ filePath }));
-    const request: IManyFileContentRequest = { fileContentRequests };
-    ipcRenderer.send(constants.IPC_MANY_FILE_CONTENT_REQUEST, request);
-}
-
-async function waitForManyFileContent(): Promise<string[]> {
-    const response = await addIpcListener<IManyFileContentResponse>(constants.IPC_MANY_FILE_CONTENT_SUCCESS_RESPONSE);
-    const isSuccessfulFileContentResponse = (response: IFileContentResponse | null) : response is IFileContentResponse => response.success;
-    const fileContentResponses = response.fileContentResponses.filter<IFileContentResponse>(isSuccessfulFileContentResponse)
-    const toFileContent = (response: IFileContentResponse): string => response.fileContent;
-    return fileContentResponses.map<string>(toFileContent);
-}
-
 function askForFileCreation(filePath: string, fileContent: string): void {
     const request: IFileCreationRequest = { filePath, fileContent };
     ipcRenderer.send(constants.IPC_FILE_CREATION_REQUEST, request);
 }
 
 async function waitForFileCreation(): Promise<void> {
-   await addIpcListener<IFileCreationResponse>(constants.IPC_FILE_CREATION_SUCCESS_RESPONSE)
+   await addIpcListener<IResponse>(constants.IPC_FILE_CREATION_SUCCESS_RESPONSE)
 }
 
 async function addIpcListener<TMessage>(channel: string): Promise<TMessage> {
@@ -97,8 +80,6 @@ contextBridge.exposeInMainWorld("controllers", {
         waitForDirectoryContent,
         askForFileContent,
         waitForFileContent,
-        askForManyFileContent,
-        waitForManyFileContent,
         askForFileCreation,
         waitForFileCreation
     }

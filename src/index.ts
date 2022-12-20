@@ -1,12 +1,12 @@
 import { app, ipcMain } from 'electron';
 import * as constants from "./constants";
-import AppReadyBehavior from "./behaviors/AppReadyBehavior";
-import WindowAllClosedBehavior from "./behaviors/WindowAllClosedBehavior";
-import AppActivateBehavior from "./behaviors/AppActivateBehavior";
-import FilePathRequestBehavior from "./behaviors/FilePathRequestBehavior";
-import HomeDirectoryPathRequestBehavior from "./behaviors/HomeDirectoryPathRequestBehavior";
+import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
+import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
+import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
+import FilePathRequestBehavior from "./behaviors/file/FilePathRequestBehavior";
+import HomeDirectoryPathRequestBehavior from "./behaviors/directory/HomeDirectoryPathRequestBehavior";
 import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
-import FileCreationRequestBehavior from "./behaviors/FileCreationRequestBehavior";
+import FileCreationRequestBehavior from "./behaviors/file/FileCreationRequestBehavior";
 import DirectoryContentRequestBehavior from "./behaviors/directory/DirectoryContentRequestBehavior";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

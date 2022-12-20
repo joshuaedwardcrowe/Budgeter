@@ -1,9 +1,9 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import * as constants from "../constants";
-import WindowModule from "../modules/WindowModule";
-import StorageModule from "../modules/StorageModule";
-import IFilePathPromptRequest from "../models/IFilePathPromptRequest";
-import IFilePathPromptResponse from "../models/IFilePathPromptResponse";
+import * as constants from "../../constants";
+import WindowModule from "../../modules/WindowModule";
+import StorageModule from "../../modules/StorageModule";
+import IFilePathPromptRequest from "../../models/IFilePathPromptRequest";
+import IFilePathPromptResponse from "../../models/IFilePathPromptResponse";
 
 export default async function (request: IFilePathPromptRequest) {
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(
@@ -26,7 +26,7 @@ export default async function (request: IFilePathPromptRequest) {
             filePath: null
         };
 
-        WindowModule.window.webContents.send(constants.IPC_PROMPT_FILE_PATH_NOT_FAILURE_RESPONSE, message);
+        WindowModule.send(constants.IPC_PROMPT_FILE_PATH_NOT_FAILURE_RESPONSE, message);
         return;
     }
 
@@ -35,5 +35,5 @@ export default async function (request: IFilePathPromptRequest) {
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.window.webContents.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message);
+    WindowModule.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message);
 }

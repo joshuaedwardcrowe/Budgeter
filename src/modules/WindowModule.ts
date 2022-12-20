@@ -1,5 +1,6 @@
 import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
-import IWindowConfiguration from "../models/IWindowConfiguration";
+import IWindowConfiguration from "../models/window/IWindowConfiguration";
+import IResponse from "../models/IResponse";
 
 class WindowModule {
     window: BrowserWindow;
@@ -23,6 +24,10 @@ class WindowModule {
 
     showOpenFileDialog(configuration: OpenDialogOptions): Promise<OpenDialogReturnValue> {
         return dialog.showOpenDialog(this.window, configuration);
+    }
+
+    send(channel: string, response: IResponse) {
+        this.window.webContents.send(channel, response);
     }
 }
 

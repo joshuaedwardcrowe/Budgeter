@@ -1,18 +1,17 @@
-import StorageModule from "../modules/StorageModule";
-import WindowModule from "../modules/WindowModule";
+import StorageModule from "../../modules/StorageModule";
+import WindowModule from "../../modules/WindowModule";
 
-import IFileCreationRequest from "../models/IFileCreationRequest";
-import IFileCreationResponse from "../models/IFileCreationResponse";
+import IFileCreationRequest from "../../models/IFileCreationRequest";
+import IResponse from "../../models/IResponse";
 
-import * as constants from "../constants";
+import * as constants from "../../constants";
 
 function sendContentFailureResponse() {
-    const message: IFileCreationResponse = {
-        success: false,
-        fileContent: null
+    const message: IResponse = {
+        success: false
     }
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_CREATION_FAILURE_RESPONSE, message);
+    WindowModule.send(constants.IPC_FILE_CREATION_FAILURE_RESPONSE, message);
 }
 
 async function tryCheckFileDoesntExist(filePath: string) {
@@ -48,9 +47,9 @@ export default async function (request: IFileCreationRequest) {
 
     await tryCheckFileExists(request.filePath);
 
-    const message: IFileCreationResponse = {
+    const message: IResponse = {
         success: true
     }
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_CREATION_SUCCESS_RESPONSE, message);
+    WindowModule.send(constants.IPC_FILE_CREATION_SUCCESS_RESPONSE, message);
 }

@@ -1,4 +1,4 @@
-import WindowModule from "../modules/WindowModule";
+import WindowModule from "../../modules/WindowModule";
 import AppReadyBehavior from "./AppReadyBehavior";
 
 // On OS X it's common to re-create a window in the app when the

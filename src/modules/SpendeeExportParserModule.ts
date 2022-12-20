@@ -39,15 +39,10 @@ export default class SpendeeParserModule {
 
     private static _getFileNameFromFilePath(filePath: string): string {
         const fileName = this._getFullFileNameFromFilePath(filePath);
-        console.log(`FULL FILE NAME: ${fileName}`);
 
         const indexOfTransactionExportPrefix = this._getExportFilePrefix(fileName);
-
         const indexOfAfterFilePrefix = indexOfTransactionExportPrefix + constants.SPENDEE_TRANSACTION_EXPORT_FILE_PREFIX.length;
-        console.log(`START INDEX: ${indexOfAfterFilePrefix}`);
-
         const indexOfFileSuffix = fileName.indexOf(constants.SPENDEE_TRANSACTION_EXPORT_FILE_SUFFIX);
-        console.log(`STOP INDEX: ${indexOfFileSuffix}`);
 
         if (indexOfAfterFilePrefix < 0 || indexOfFileSuffix < 0) {
             throw new Error("This is not a spendee export file");
@@ -58,7 +53,6 @@ export default class SpendeeParserModule {
 
     private static _getFullFileNameFromFilePath(filePath: string): string {
         const indexOfTransactionExportPrefix = this._getExportFilePrefix(filePath);
-        console.log(`EXPORT PREFIX INDEX: ${indexOfTransactionExportPrefix}`);
 
         if (indexOfTransactionExportPrefix < 0) {
             throw new Error("This is not a spendee file");

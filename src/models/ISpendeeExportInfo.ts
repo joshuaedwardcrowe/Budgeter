@@ -1,4 +1,5 @@
 export default interface ISpendeeExportInfo {
     accountName: string,
-    created: string
+    created: string,
+    fileName: string
 }
