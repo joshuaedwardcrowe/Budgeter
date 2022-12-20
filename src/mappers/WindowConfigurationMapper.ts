@@ -1,5 +1,5 @@
-import IWindowConfiguration from "../models/IWindowConfiguration";
-import IWindowWebConfiguration from "../models/IWindowWebConfiguration";
+import IWindowConfiguration from "../models/window/IWindowConfiguration";
+import IWindowWebConfiguration from "../models/window/IWindowWebConfiguration";
 import IBudgeterConfiguration from "../models/IBudgeterConfiguration";
 
 export default class WindowConfigurationMapper {

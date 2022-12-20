@@ -1,6 +1,5 @@
 import { app, ipcMain } from 'electron';
 import MainLoggingModule from "./modules/MainLoggingModule";
-import MainLoggingLevel from "./models/MainLoggingLevel";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
@@ -22,12 +21,12 @@ if (require('electron-squirrel-startup')) {
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-MainLoggingModule.log(MainLoggingLevel.INFO, "Index", `Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
-MainLoggingModule.log(MainLoggingLevel.INFO, "Index", `Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
+MainLoggingModule.logInfo("Index", `Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
+MainLoggingModule.logInfo("Index", `Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
 
 app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY));
+app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
-app.on(constants.APP_ACTIVATE, () => AppActivateBehavior())
 
 ipcMain.on(constants.IPC_PROMPT_FILE_PATH_REQUEST, (_, request) => FilePathRequestBehavior(request));
 ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, () => HomeDirectoryPathRequestBehavior())
@@ -35,4 +34,4 @@ ipcMain.on(constants.IPC_FILE_CONTENT_REQUEST, (_, request) => FileContentReques
 ipcMain.on(constants.IPC_FILE_CREATION_REQUEST, (_, request) => FileCreationRequestBehavior(request));
 ipcMain.on(constants.IPC_DIRECTORY_CONTENT_REQUEST, (_, request) => DirectoryContentRequestBehavior(request));
 
-MainLoggingModule.log(MainLoggingLevel.INFO, "Index", "IPC Listeners Attached");
+MainLoggingModule.logInfo("Index", "IPC Listeners Attached");

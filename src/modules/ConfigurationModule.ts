@@ -17,7 +17,7 @@ const DefaultBudgeterConfig: IBudgeterConfiguration = {
 
 export default class ConfigurationModule {
     public static async getConfiguration(): Promise<IBudgeterConfiguration> {
-        const folderExists: boolean = await StorageModule.checkFolderExists(HOME_CONFIG_FOLDER_PATH);
+        const folderExists: boolean = await StorageModule.tryCheckDirectoryExists(HOME_CONFIG_FOLDER_PATH);
 
         if (!folderExists) {
             const fileContents: string = JSON.stringify(DefaultBudgeterConfig);

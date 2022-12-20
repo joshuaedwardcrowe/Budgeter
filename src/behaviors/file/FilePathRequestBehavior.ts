@@ -1,11 +1,14 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import * as constants from "../../constants";
+import MainLoggingModule from "../../modules/MainLoggingModule";
 import WindowModule from "../../modules/WindowModule";
 import StorageModule from "../../modules/StorageModule";
-import IFilePathPromptRequest from "../../models/IFilePathPromptRequest";
-import IFilePathPromptResponse from "../../models/IFilePathPromptResponse";
+import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
+import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
+import * as constants from "../../constants";
 
 export default async function (request: IFilePathPromptRequest) {
+    MainLoggingModule.logInfo("FilePathRequestBehavior", `Got Request for ${request.reasonForFile}`);
+
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(
             constants.TEMPLATE_REASON_FOR_FILE,
             request.reasonForFile);
@@ -18,9 +21,12 @@ export default async function (request: IFilePathPromptRequest) {
         properties: ["openFile"]
     }
 
+    MainLoggingModule.logInfo("FilePathRequestBehavior", `Opening File Dialog in ${openFileOptions.defaultPath}`);
     const result: OpenDialogReturnValue = await WindowModule.showOpenFileDialog(openFileOptions);
 
     if (result.canceled) {
+        MainLoggingModule.logWarning("FilePathRequestBehavior", "File Dialog Closed");
+
         const message: IFilePathPromptResponse = {
             success: false,
             filePath: null
@@ -35,5 +41,5 @@ export default async function (request: IFilePathPromptRequest) {
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message);
+    WindowModule.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message)
 }

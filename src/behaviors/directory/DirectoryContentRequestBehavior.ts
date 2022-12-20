@@ -1,10 +1,9 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
-import MainLoggingLevel from "../../models/MainLoggingLevel";
 import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
-import { IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE } from "../../constants";
+import {IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE, IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE} from "../../constants";
 
 function sendContentFailureResponse() {
     const response: IDirectoryContentResponse = {
@@ -12,41 +11,30 @@ function sendContentFailureResponse() {
         directoryContent: []
     }
 
-    WindowModule.window.webContents.send(IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE, response);
-}
-
-async function tryCheckDirectoryExists(directoryPath: string) {
-    try {
-        MainLoggingModule.log(MainLoggingLevel.INFO, "DirectoryContentRequestBehavior", `Trying to Check Directory: ${directoryPath}`);
-        await StorageModule.checkDirectoryExists(directoryPath);
-    } catch (e) {
-        MainLoggingModule.log(MainLoggingLevel.ERROR, "DirectoryContentRequestBehavior", `Failed to Check Directory: ${directoryPath}`);
-        sendContentFailureResponse();
-    }
-}
-
-async function tryReadDirectoryContent(directoryPath: string) {
-    try {
-        MainLoggingModule.log(MainLoggingLevel.INFO, "DirectoryContentRequestBehavior", `Trying to Get Content of Directory: ${directoryPath}`);
-        return await StorageModule.readDirectoryContent(directoryPath);
-    } catch (e) {
-        MainLoggingModule.log(MainLoggingLevel.ERROR, "DirectoryContentRequestBehavior", `Failed to Get Content of Directory: ${directoryPath}`);
-        sendContentFailureResponse();
-    }
+    WindowModule.send(IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE, response);
 }
 
 export default async function (request: IDirectoryContentRequest) {
-    MainLoggingModule.log(MainLoggingLevel.INFO, "DirectoryContentRequestBehavior", `Got Request`);
+    const directoryExists = await StorageModule.tryCheckDirectoryExists(request.directoryPath);
 
-     await tryCheckDirectoryExists(request.directoryPath);
+    if (!directoryExists) {
+        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No Directory: ${request.directoryPath}`);
+        sendContentFailureResponse();
+        return;
+    }
 
-     const directoryContent = await tryReadDirectoryContent(request.directoryPath);
+    try {
+        const directoryContent = await StorageModule.readDirectoryContent(request.directoryPath);
 
-     const response: IDirectoryContentResponse = {
-         success: true,
-         directoryContent
-     };
+        const response: IDirectoryContentResponse = {
+            success: true,
+            directoryContent
+        };
 
-     WindowModule.send(IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, response);
-     MainLoggingModule.log(MainLoggingLevel.INFO, "DirectoryContentRequestBehavior", `Sent Response, Content: ${response.directoryContent}`);
+        WindowModule.send(IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, response);
+        MainLoggingModule.logInfo("DirectoryContentRequestBehavior", `Resolved: ${response.directoryContent}`);
+    } catch (e) {
+        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `Failed Read Directory Content: ${request.directoryPath}`);
+        sendContentFailureResponse();
+    }
 }

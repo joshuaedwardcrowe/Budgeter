@@ -1,6 +1,6 @@
-import { createLogger, format, transports, Logger, LoggerOptions } from "winston";
+import {createLogger, format, Logger, LoggerOptions, transports} from "winston";
 import MainLoggingLevel from "../models/MainLoggingLevel";
-import * as constants from "../constants";
+
 class MainLoggingModule {
     private logger: Logger;
 
@@ -12,6 +12,18 @@ class MainLoggingModule {
 
     log(level: MainLoggingLevel, locationName: string, message: string) {
         this.logger.log(level, `${locationName} - ${message}`);
+    }
+
+    logInfo(locationName: string, message: string) {
+        this.log(MainLoggingLevel.INFO, locationName, message);
+    }
+
+    logWarning(locationName: string, message: string) {
+        this.log(MainLoggingLevel.WARNING, locationName, message);
+    }
+
+    logError(locationName: string, message: string) {
+        this.log(MainLoggingLevel.ERROR, locationName, message);
     }
 
     private addConsoleIfNotProduction() {

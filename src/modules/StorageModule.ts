@@ -5,10 +5,6 @@ const TEXT_ENCODING = "utf8";
 
 class StorageModule {
 
-    public static checkDirectoryExists(directoryPath: string): Promise<boolean> {
-        return this._checkFileSystemObjectExists(directoryPath);
-    }
-
     public static getHomeDirectoryPath(): string {
         return os.homedir();
     }
@@ -16,13 +12,12 @@ class StorageModule {
     public static async readDirectoryContent(directoryPath: string): Promise<string[]> {
         return fs.readdir(directoryPath);
     }
-
-    public static checkFolderExists(folderPath: string): Promise<boolean> {
-        return this._checkFileSystemObjectExists(folderPath);
+    public static tryCheckDirectoryExists(directoryPath: string): Promise<boolean> {
+        return this._tryCheckFileSystemObjectExists(directoryPath);
     }
 
-    public static async checkFileExists(filePath: string): Promise<boolean> {
-        return this._checkFileSystemObjectExists(filePath);
+    public static async tryCheckFileExists(filePath: string): Promise<boolean> {
+        return this._tryCheckFileSystemObjectExists(filePath);
     }
 
     public static createFolder(folderPath: string): Promise<void> {
@@ -37,7 +32,7 @@ class StorageModule {
         return fs.readFile(filePath, TEXT_ENCODING);
     }
 
-    private static async _checkFileSystemObjectExists(filePath: string): Promise<boolean> {
+    private static async _tryCheckFileSystemObjectExists(filePath: string): Promise<boolean> {
         try {
             await fs.access(filePath);
             return true;
