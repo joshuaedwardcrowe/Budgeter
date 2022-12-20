@@ -16,7 +16,7 @@ class MainLoggingModule {
 
     private addConsoleIfNotProduction() {
         const consoleTransport = new transports.Console({
-            format: format.simple()
+            format: format.timestamp()
         });
         
         this.logger.add(consoleTransport)
@@ -25,10 +25,10 @@ class MainLoggingModule {
     private static getOptions(): LoggerOptions {
         return {
             level: "info",
-            format: format.json(),
-            transports: [
-                new transports.File({ filename: constants.LOG_FILE_NAME })
-            ]
+            format: format.combine(format.json(), format.timestamp()),
+//            transports: [
+//                new transports.File({ filename: constants.LOG_FILE_NAME })
+//            ]
         }
     }
 }
