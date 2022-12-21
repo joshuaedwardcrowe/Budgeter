@@ -1,9 +1,16 @@
-enum IpcChannel {
-    PROMPT_FILE_PATH = "promptFilePath",
-    FILE_CONTENT = "fileContent",
-    FILE_CREATION = "fileCreation",
-    HOME_DIRECTORY_PATH = "homeDirectoryPath",
-    DIRECTORY_CONTENT = "directoryContent"
-}
+import IpcKey from "./IpcKey";
+import IpcStatus from "./IpcStatus";
 
-export default IpcChannel;
+export default class IpcChannel {
+    private readonly key: IpcKey
+    private readonly status: IpcStatus
+
+    constructor(key: IpcKey, status: IpcStatus) {
+        this.key = key;
+        this.status = status;
+    }
+
+    stringify(): string {
+        return `${this.key}:${this.status}`;
+    }
+}

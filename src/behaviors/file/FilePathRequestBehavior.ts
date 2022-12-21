@@ -5,7 +5,7 @@ import StorageModule from "../../modules/StorageModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
-import IpcChannel from "../../models/IpcChannel";
+import IpcKey from "../../models/IpcKey";
 
 export default async function (request: IFilePathPromptRequest) {
     MainLoggingModule.logInfo("FilePathRequestBehavior", `Got Request for ${request.reasonForFilePath}`);
@@ -33,7 +33,7 @@ export default async function (request: IFilePathPromptRequest) {
             filePath: null
         };
 
-        WindowModule.sendFailure(IpcChannel.PROMPT_FILE_PATH, response);
+        WindowModule.sendFailure(IpcKey.PROMPT_FILE_PATH, response);
         return;
     }
 
@@ -42,5 +42,5 @@ export default async function (request: IFilePathPromptRequest) {
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.sendSuccess(IpcChannel.PROMPT_FILE_PATH, response)
+    WindowModule.sendSuccess(IpcKey.PROMPT_FILE_PATH, response)
 }
