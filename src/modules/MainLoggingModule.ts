@@ -1,5 +1,5 @@
 import {createLogger, format, Logger, LoggerOptions, transports} from "winston";
-import MainLoggingLevel from "../models/MainLoggingLevel";
+import LoggingLevel from "../models/LoggingLevel";
 
 class MainLoggingModule {
     private logger: Logger;
@@ -10,20 +10,20 @@ class MainLoggingModule {
         this.addConsoleIfNotProduction();
     }
 
-    log(level: MainLoggingLevel, locationName: string, message: string) {
+    log(level: LoggingLevel, locationName: string, message: string) {
         this.logger.log(level, `${locationName} - ${message}`);
     }
 
     logInfo(locationName: string, message: string) {
-        this.log(MainLoggingLevel.INFO, locationName, message);
+        this.log(LoggingLevel.INFO, locationName, message);
     }
 
     logWarning(locationName: string, message: string) {
-        this.log(MainLoggingLevel.WARNING, locationName, message);
+        this.log(LoggingLevel.WARNING, locationName, message);
     }
 
     logError(locationName: string, message: string) {
-        this.log(MainLoggingLevel.ERROR, locationName, message);
+        this.log(LoggingLevel.ERROR, locationName, message);
     }
 
     private addConsoleIfNotProduction() {

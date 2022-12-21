@@ -10,6 +10,8 @@ import IDirectoryContentRequest from "./models/directory/IDirectoryContentReques
 import IDirectoryContentResponse from "./models/directory/IDirectoryContentResponse";
 import * as constants from "./constants";
 
+// TODO: Handle error responses with Promise.race?
+
 function promptForFilePath(reasonForFile: string): void {
     const request: IFilePathPromptRequest = { reasonForFile };
     ipcRenderer.send(constants.IPC_PROMPT_FILE_PATH_REQUEST, request);

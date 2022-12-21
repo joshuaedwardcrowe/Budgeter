@@ -24,6 +24,7 @@
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
     "@electron-forge/plugin-webpack": "^6.0.4",
+    "@types/roarr": "^2.14.3",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
@@ -40,6 +41,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "roarr": "^7.14.1",
     "vue": "^3.2.45",
     "winston": "^3.8.2"
   }

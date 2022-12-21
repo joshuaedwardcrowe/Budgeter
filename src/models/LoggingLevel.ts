@@ -1,7 +1,7 @@
-enum MainLoggingLevel {
+enum LoggingLevel {
     INFO = "info",
     WARNING = "warning",
     ERROR = "error"
 }
 
-export default MainLoggingLevel;
+export default LoggingLevel;
