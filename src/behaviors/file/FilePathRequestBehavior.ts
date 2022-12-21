@@ -16,7 +16,7 @@ export default async function (request: IFilePathPromptRequest) {
 
     const openFileOptions: OpenDialogOptions = {
         title: reasonForFile,
-        defaultPath: `${StorageModule.getHomeDirectoryPath()}/${constants.ENVIRONMENT_DOWNLOADS_FOLDER}`,
+        defaultPath: `${StorageModule.getOperatingSystemHomeDirectoryPath()}/${constants.ENVIRONMENT_DOWNLOADS_FOLDER}`,
         buttonLabel: reasonForFile,
         message: "Idk what this message is",
         properties: ["openFile"]

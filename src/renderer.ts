@@ -16,10 +16,9 @@ createApp({
     methods: {
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
-            const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
-            modules.directory.askForDirectoryContent(exportSaveDirectoryPath);
-            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryPath}`);
+            modules.directory.askForDirectoryContent(homeDirectoryPath);
+            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${homeDirectoryPath}`);
 
             const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent();
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryContent}`);
@@ -46,7 +45,7 @@ createApp({
 
             const homeDirectoryPath = await this.getHomeDirectoryPath();
 
-            const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${exportInfo.fileName}.csv`;
+            const exportSaveDirectoryPath = `${homeDirectoryPath}/${exportInfo.fileName}.csv`;
 
             modules.file.askForFileContent(filePath);
             RendererLoggingModule.logInfo("askForSpendeeExport", `Asked for File Content: ${filePath}`);

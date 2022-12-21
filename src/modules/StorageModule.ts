@@ -5,7 +5,7 @@ const TEXT_ENCODING = "utf8";
 
 class StorageModule {
 
-    public static getHomeDirectoryPath(): string {
+    public static getOperatingSystemHomeDirectoryPath(): string {
         return os.homedir();
     }
 
