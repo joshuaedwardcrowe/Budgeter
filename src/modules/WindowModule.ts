@@ -3,9 +3,7 @@ import MainLoggingModule from "./MainLoggingModule";
 import IWindowConfiguration from "../models/window/IWindowConfiguration";
 import IResponse from "../models/IResponse";
 import IpcChannel from "../models/IpcChannel";
-
-const RESPONSE_FAILURE = "response_failure";
-const RESPONSE_SUCCESS = "response_success";
+import IpcStatus from "../models/IpcStatus";
 
 class WindowModule {
     window: BrowserWindow;
@@ -32,19 +30,19 @@ class WindowModule {
     }
 
     sendSuccess(channel: IpcChannel, response: IResponse) {
-        const channelKey: string = this.generateChannelKey(channel, RESPONSE_SUCCESS);
+        const channelKey: string = this.generateChannelKey(channel, IpcStatus.SUCCESS);
         MainLoggingModule.logInfo("WindowModule", `Sent: ${channelKey}`);
         this.window.webContents.send(channelKey, response);
     }
 
     sendFailure(channel: IpcChannel, response: IResponse) {
-        const channelKey: string = this.generateChannelKey(channel, RESPONSE_SUCCESS);
+        const channelKey: string = this.generateChannelKey(channel, IpcStatus.FAILURE);
         MainLoggingModule.logWarning("WindowModule", `Sent: ${channelKey}`);
         this.window.webContents.send(channelKey, response);
     }
 
-    private generateChannelKey(channel: IpcChannel, type: string): string {
-        return `${channel}:${type}`;
+    private generateChannelKey(channel: IpcChannel, status: IpcStatus): string {
+        return `${channel}:${status}`;
     }
 }
 
