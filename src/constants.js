@@ -14,10 +14,9 @@ export const DEFAULT_WINDOW_HEIGHT = 800;
 export const DEFAULT_WINDOW_WIDTH = 1200;
 export const DEFAULT_WINDOW_NODE_INTEGRATION = false;
 export const DEFAULT_WINDOW_CONTEXT_ISOLATION = true;
-
 export const IPC_PROMPT_FILE_PATH_REQUEST = "promptFilePath:request";
 export const IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE = "promptFilePath:response_success"
-export const IPC_PROMPT_FILE_PATH_NOT_FAILURE_RESPONSE = "promptFilePath:response_failure";
+export const IPC_PROMPT_FILE_PATH_FAILURE_RESPONSE = "promptFilePath:response_failure";
 export const IPC_HOME_DIRECTORY_PATH_REQUEST = "homeDirectoryPath:request";
 export const IPC_HOME_DIRECTORY_PATH_SUCCESS_RESPONSE = "homeDirectoryPath:success";
 export const IPC_DIRECTORY_CONTENT_REQUEST = "directoryContent:request";

@@ -36,7 +36,12 @@ class MainLoggingModule {
 
     private static getOptions(): LoggerOptions {
         return {
-            level: "info",
+            levels: {
+                "ok": 0,
+                "info": 1,
+                "warning": 2,
+                "error": 3
+            },
             format: format.combine(format.json(), format.timestamp()),
 //            transports: [
 //                new transports.File({ filename: constants.LOG_FILE_NAME })

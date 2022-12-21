@@ -7,11 +7,11 @@ import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
 
 export default async function (request: IFilePathPromptRequest) {
-    MainLoggingModule.logInfo("FilePathRequestBehavior", `Got Request for ${request.reasonForFile}`);
+    MainLoggingModule.logInfo("FilePathRequestBehavior", `Got Request for ${request.reasonForFilePath}`);
 
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(
             constants.TEMPLATE_REASON_FOR_FILE,
-            request.reasonForFile);
+            request.reasonForFilePath);
 
     const openFileOptions: OpenDialogOptions = {
         title: reasonForFile,
@@ -32,7 +32,7 @@ export default async function (request: IFilePathPromptRequest) {
             filePath: null
         };
 
-        WindowModule.send(constants.IPC_PROMPT_FILE_PATH_NOT_FAILURE_RESPONSE, message);
+        WindowModule.send(constants.IPC_PROMPT_FILE_PATH_FAILURE_RESPONSE, message);
         return;
     }
 
