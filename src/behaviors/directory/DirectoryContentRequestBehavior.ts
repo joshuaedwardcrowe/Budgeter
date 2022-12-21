@@ -1,6 +1,6 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import WindowModule from "../../modules/WindowModule";
+import MainIcpModule from "../../modules/MainIcpModule";
 import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
 import IpcKey from "../../models/IpcKey";
@@ -11,7 +11,7 @@ function sendContentFailureResponse() {
         directoryContent: []
     }
 
-    WindowModule.sendFailure(IpcKey.DIRECTORY_CONTENT, response);
+    MainIcpModule.sendFailure(IpcKey.DIRECTORY_CONTENT, response);
 }
 
 export default async function (request: IDirectoryContentRequest) {
@@ -31,7 +31,7 @@ export default async function (request: IDirectoryContentRequest) {
             directoryContent
         };
 
-        WindowModule.sendSuccess(IpcKey.DIRECTORY_CONTENT, response);
+        MainIcpModule.sendSuccess(IpcKey.DIRECTORY_CONTENT, response);
         MainLoggingModule.logInfo("DirectoryContentRequestBehavior", `Resolved: ${response.directoryContent}`);
     } catch (e) {
         console.log(e);

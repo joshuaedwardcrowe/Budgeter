@@ -1,6 +1,6 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import WindowModule from "../../modules/WindowModule";
+import MainIcpModule from "../../modules/MainIcpModule";
 import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
 import IpcKey from "../../models/IpcKey";
 import { CONFIG_FOLDER_NAME } from "../../constants";
@@ -14,6 +14,6 @@ export default function () {
         homeDirectoryPath
     }
 
-    WindowModule.sendSuccess(IpcKey.HOME_DIRECTORY_PATH, response);
+    MainIcpModule.sendSuccess(IpcKey.HOME_DIRECTORY_PATH, response);
     MainLoggingModule.logInfo("HomeDirectoryPathRequestBehavior", `Resolved: ${response.homeDirectoryPath}`);
 }

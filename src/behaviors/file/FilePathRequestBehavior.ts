@@ -1,6 +1,7 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import WindowModule from "../../modules/WindowModule";
+import MainIcpModule from "../../modules/MainIcpModule";
 import StorageModule from "../../modules/StorageModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
@@ -33,7 +34,7 @@ export default async function (request: IFilePathPromptRequest) {
             filePath: null
         };
 
-        WindowModule.sendFailure(IpcKey.PROMPT_FILE_PATH, response);
+        MainIcpModule.sendFailure(IpcKey.PROMPT_FILE_PATH, response);
         return;
     }
 
@@ -42,5 +43,5 @@ export default async function (request: IFilePathPromptRequest) {
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.sendSuccess(IpcKey.PROMPT_FILE_PATH, response)
+    MainIcpModule.sendSuccess(IpcKey.PROMPT_FILE_PATH, response)
 }

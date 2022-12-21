@@ -1,6 +1,7 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
+import MainIcpModule from "../../modules/MainIcpModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
 import IpcKey from "../../models/IpcKey";
@@ -11,7 +12,7 @@ function sendContentFailureResponse() {
         fileContent: null
     }
 
-    WindowModule.sendFailure(IpcKey.FILE_CONTENT, response)
+    MainIcpModule.sendFailure(IpcKey.FILE_CONTENT, response)
 }
 
 export default async function (request: IFileContentRequest) {
@@ -31,7 +32,7 @@ export default async function (request: IFileContentRequest) {
             fileContent
         };
 
-        WindowModule.sendSuccess(IpcKey.FILE_CONTENT, message);
+        MainIcpModule.sendSuccess(IpcKey.FILE_CONTENT, message);
     } catch (e) {
         MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File Content: ${request.filePath}`);
         sendContentFailureResponse();
