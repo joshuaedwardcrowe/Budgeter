@@ -7,7 +7,7 @@ function toTitleCase(str: string): string {
     });
 }
 
-
+// TODO: Can this be done as a SpendeeExportInfo mapper instead?
 export default class SpendeeParserModule {
 
     static checkFileIsExport(fileName: string): boolean {

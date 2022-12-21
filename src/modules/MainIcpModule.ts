@@ -12,7 +12,13 @@ export default class MainIcpModule {
         MainLoggingModule.logInfo("MainIpcModule", `Sent: ${stringified}`);
         WindowModule.window.webContents.send(stringified, response);
     }
-    static sendFailure(key: IpcKey, response: IResponse): void {
+    static sendFailure(key: IpcKey, response?: IResponse): void {
+        if (!response) {
+            response = {
+                success: false
+            }
+        }
+
         const channel = new IpcChannel(key, IpcStatus.FAILURE);
         const stringified = channel.stringify();
         MainLoggingModule.logInfo("MainIpcModule", `Sent: ${stringified}`);

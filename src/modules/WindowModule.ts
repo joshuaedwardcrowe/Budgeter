@@ -35,7 +35,11 @@ class WindowModule {
         this.window.webContents.send(channelKey, response);
     }
 
-    sendFailure(channel: IpcKey, response: IResponse) {
+    sendFailure(channel: IpcKey, response?: IResponse) {
+        if (!response) {
+            response = { success: false }
+        }
+
         const channelKey: string = this.generateChannelKey(channel, IpcStatus.FAILURE);
         MainLoggingModule.logWarning("WindowModule", `Sent: ${channelKey}`);
         this.window.webContents.send(channelKey, response);

@@ -11,18 +11,18 @@
             Current Budget
         </div>
         <div v-else>
-            <button @click="askForSpendeeExport">Add Audit</button>
+            <button @click="askForSpendeeExport">Add Export</button>
             <table>
                 <tr>
                     <th>Account</th>
                     <th>Added</th>
                     <th>Open</th>
                 </tr>
-                <tr v-for="budget in exports">
-                    <td>{{budget.accountName}}</td>
-                    <td>{{budget.created}}</td>
+                <tr v-for="spendeeExport in spendeeExports">
+                    <td>{{spendeeExport.accountName}}</td>
+                    <td>{{spendeeExport.created}}</td>
                     <td>
-                        <button>Open</button>
+                        <button @click="createNewBudget(spendeeExport)">Create New Budget</button>
                     </td>
                 </tr>
             </table>

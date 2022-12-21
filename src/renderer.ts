@@ -1,24 +1,40 @@
 import './index.css';
 import { createApp } from "vue";
-import * as constants from "./constants";
 import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
 import RendererLoggingModule from "./modules/RendererLoggingModule";
+import ISpendeeExport from "./models/ISpendeeExport";
 
 createApp({
     data: () => ({
         currentBudget: null,
-        exports: []
+        spendeeExports: [],
+        homeDirectoryPath: null,
     }),
     mounted: async function() {
         await this.getExistingSpendeeExports();
-    },
+        },
     methods: {
+        async createNewBudget(info: ISpendeeExportInfo) {
+            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
+
+            modules.parsing.askForSpendeeExportParsing(spendeeExportPath);
+            const spendeeExport: ISpendeeExport = await modules.parsing.resolveSpendeeExportParsing();
+
+            console.log("SPENDEE EXPORT");
+            console.log(spendeeExport);
+
+            // Map to Budget History.
+
+            // Set to current budget.
+
+        },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
 
             modules.directory.askForDirectoryContent(homeDirectoryPath);
-            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${homeDirectoryPath}`);
+            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Asking For Directory Content: ${homeDirectoryPath}`);
 
             const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent();
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryContent}`);
@@ -27,12 +43,12 @@ createApp({
             const getExportName = (filePath: string): string => SpendeeParserModule.getExportNameFromFileName(filePath);
             const parseExportInfo = (fileName: string): ISpendeeExportInfo => SpendeeParserModule.parseExportInfoFromFileName(fileName);
 
-            this.exports = exportSaveDirectoryContent
+            this.spendeeExports = exportSaveDirectoryContent
                 .filter<string>(isExport)
                 .map<string>(getExportName)
                 .map<ISpendeeExportInfo>(parseExportInfo);
 
-            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Set ${this.exports.length} Exports`);
+            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Set ${this.spendeeExports.length} Exports`);
         },
         async askForSpendeeExport() {
             modules.file.askToPromptForFilePath("Spendee Export");
@@ -45,6 +61,7 @@ createApp({
 
             const homeDirectoryPath = await this.getHomeDirectoryPath();
 
+            // TODO: There must be a way to not put CSV in here and in Export Info FileName instead.
             const exportSaveDirectoryPath = `${homeDirectoryPath}/${exportInfo.fileName}.csv`;
 
             modules.file.askForFileContent(filePath);
@@ -59,16 +76,20 @@ createApp({
             await modules.file.waitForFileCreation();
             RendererLoggingModule.logInfo("askForSpendeeExport", `File Created: ${exportSaveDirectoryPath}`);
 
-            this.exports = [exportInfo, ...this.exports]
+            this.spendeeExports = [exportInfo, ...this.spendeeExports]
         },
         async getHomeDirectoryPath() {
-            modules.directory.askForHomeDirectoryPath();
-            RendererLoggingModule.logInfo("getHomeDirectoryPath", "Asked for Home Directory Path");
+            if (!this.homeDirectoryPath) {
+                modules.directory.askForHomeDirectoryPath();
+                RendererLoggingModule.logInfo("getHomeDirectoryPath", "Asked for Home Directory Path");
 
-            const homeDirectoryPath = await modules.directory.resolveHomeDirectoryPath();
-            RendererLoggingModule.logInfo("getHomeDirectoryPath", `Got Home Directory Path: ${homeDirectoryPath}`);
+                const homeDirectoryPath = await modules.directory.resolveHomeDirectoryPath();
+                RendererLoggingModule.logInfo("getHomeDirectoryPath", `Got Home Directory Path: ${homeDirectoryPath}`);
 
-            return homeDirectoryPath;
+                this.homeDirectoryPath = homeDirectoryPath;
+            }
+
+            return this.homeDirectoryPath;
         }
     }
 }).mount('#vue-app');

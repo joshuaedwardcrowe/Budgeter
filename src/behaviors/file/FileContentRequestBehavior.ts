@@ -1,6 +1,5 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import WindowModule from "../../modules/WindowModule";
 import MainIcpModule from "../../modules/MainIcpModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
@@ -16,7 +15,7 @@ function sendContentFailureResponse() {
 }
 
 export default async function (request: IFileContentRequest) {
-    const fileExists = StorageModule.tryCheckFileExists(request.filePath);
+    const fileExists = await StorageModule.tryCheckFileExists(request.filePath);
 
     if (!fileExists) {
         MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File: ${request.filePath}`);

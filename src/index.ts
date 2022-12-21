@@ -8,7 +8,10 @@ import HomeDirectoryPathRequestBehavior from "./behaviors/directory/HomeDirector
 import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
 import FileCreationRequestBehavior from "./behaviors/file/FileCreationRequestBehavior";
 import DirectoryContentRequestBehavior from "./behaviors/directory/DirectoryContentRequestBehavior";
+import SpendeeExportParsingBehavior from "./behaviors/parsing/SpendeeExportParsingBehavior";
 import * as constants from "./constants";
+import IpcKey from "./models/IpcKey";
+import IpcStatus from "./models/IpcStatus";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -28,10 +31,12 @@ app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENT
 app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
 
+// TODO: Can this be integrated into MainIcpModule
 ipcMain.on(constants.IPC_PROMPT_FILE_PATH_REQUEST, (_, request) => FilePathRequestBehavior(request));
 ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, () => HomeDirectoryPathRequestBehavior())
 ipcMain.on(constants.IPC_FILE_CONTENT_REQUEST, (_, request) => FileContentRequestBehavior(request));
 ipcMain.on(constants.IPC_FILE_CREATION_REQUEST, (_, request) => FileCreationRequestBehavior(request));
 ipcMain.on(constants.IPC_DIRECTORY_CONTENT_REQUEST, (_, request) => DirectoryContentRequestBehavior(request));
+ipcMain.on(`${IpcKey.SPENDEE_EXPORT_PARSING}:${IpcStatus.REQUEST}`, (_, request) => SpendeeExportParsingBehavior(request))
 
 MainLoggingModule.logInfo("Index", "IPC Listeners Attached");
