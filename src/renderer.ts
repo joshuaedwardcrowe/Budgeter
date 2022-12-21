@@ -4,6 +4,7 @@ import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
 import RendererLoggingModule from "./modules/RendererLoggingModule";
 import ISpendeeExport from "./models/ISpendeeExport";
+import BudgetMapper from "./mappers/BudgetMapper";
 
 createApp({
     data: () => ({
@@ -20,15 +21,9 @@ createApp({
             const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
 
             modules.parsing.askForSpendeeExportParsing(spendeeExportPath);
-            const spendeeExport: ISpendeeExport = await modules.parsing.resolveSpendeeExportParsing();
+            const spendeeExports: ISpendeeExport[] = await modules.parsing.resolveSpendeeExportParsing();
 
-            console.log("SPENDEE EXPORT");
-            console.log(spendeeExport);
-
-            // Map to Budget History.
-
-            // Set to current budget.
-
+            this.currentBudget = BudgetMapper.fromSpendeeExports(spendeeExports);
         },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();

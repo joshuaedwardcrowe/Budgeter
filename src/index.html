@@ -8,7 +8,21 @@
     <h1>Budgeter</h1>
     <div id="vue-app">
         <div v-if="currentBudget !== null">
-            Current Budget
+            Current Budget:
+
+            <h1>History</h1>
+            <table>
+            <tr>
+                <th>Budget Name</th>
+                <th>Budget Type</th>
+                <th>Budget Amount</th>
+            </tr>
+            <tr v-for="budgetHistory in currentBudget.history">
+                <td>{{budgetHistory.name}}</td>
+                <td>{{budgetHistory.type}}</td>
+                <td>{{budgetHistory.amount}}</td>
+            </tr>
+            </table>
         </div>
         <div v-else>
             <button @click="askForSpendeeExport">Add Export</button>

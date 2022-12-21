@@ -23,7 +23,7 @@ export default async function (request: ISpendeeExportParsingRequest) {
     MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `Got File: ${request.exportFilePath}`);
 
     const parser = parseString(content);
-    const exports: ISpendeeExport[] = [];
+    const spendeeExports: ISpendeeExport[] = [];
 
     parser.on(CSV_PARSING_ERROR, error => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Failed: ${error}`);
@@ -33,15 +33,18 @@ export default async function (request: ISpendeeExportParsingRequest) {
     parser.on(CSV_PARSING_DATA, row => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Got Data: ${row}`);
         const spendeeExport = SpendeeExportMapper.fromCSVRow(row);
-        exports.push(spendeeExport);
+        spendeeExports.push(spendeeExport);
     });
 
     parser.on(CSV_PARSING_END, (rowCount: number) => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Completed: ${rowCount} Rows`);
 
+        spendeeExports.shift();
+        MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Removing Header Row`);
+
         const response: ISpendeeExportParsingResponse = {
             success: true,
-            exports
+            exports: spendeeExports
         };
 
         MainIcpModule.sendSuccess(IpcKey.SPENDEE_EXPORT_PARSING, response);

@@ -13,6 +13,7 @@ class MainLoggingModule {
         this.logger.log(level, `${locationName} - ${message}`);
     }
 
+    // TODO: Need debug at some point.
     logInfo(locationName: string, message: string) {
         this.log(LoggingLevel.INFO, locationName, message);
     }
