@@ -1,4 +1,4 @@
-enum Channel {
+enum IpcChannel {
     PROMPT_FILE_PATH = "promptFilePath",
     FILE_CONTENT = "fileContent",
     FILE_CREATION = "fileCreation",
@@ -6,4 +6,4 @@ enum Channel {
     DIRECTORY_CONTENT = "directoryContent"
 }
 
-export default Channel;
+export default IpcChannel;

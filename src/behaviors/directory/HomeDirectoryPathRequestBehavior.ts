@@ -2,7 +2,7 @@ import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
-import Channel from "../../models/Channel";
+import IpcChannel from "../../models/IpcChannel";
 import { CONFIG_FOLDER_NAME } from "../../constants";
 
 export default function () {
@@ -14,6 +14,6 @@ export default function () {
         homeDirectoryPath
     }
 
-    WindowModule.sendSuccess(Channel.HOME_DIRECTORY_PATH, response);
+    WindowModule.sendSuccess(IpcChannel.HOME_DIRECTORY_PATH, response);
     MainLoggingModule.logInfo("HomeDirectoryPathRequestBehavior", `Resolved: ${response.homeDirectoryPath}`);
 }

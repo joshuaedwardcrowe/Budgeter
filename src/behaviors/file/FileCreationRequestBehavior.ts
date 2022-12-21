@@ -3,14 +3,14 @@ import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IFileCreationRequest from "../../models/file/IFileCreationRequest";
 import IResponse from "../../models/IResponse";
-import Channel from "../../models/Channel";
+import IpcChannel from "../../models/IpcChannel";
 
 function sendContentFailureResponse() {
     const response: IResponse = {
         success: false
     }
 
-    WindowModule.sendFailure(Channel.FILE_CREATION, response);
+    WindowModule.sendFailure(IpcChannel.FILE_CREATION, response);
 }
 
 export default async function (request: IFileCreationRequest) {
@@ -31,7 +31,7 @@ export default async function (request: IFileCreationRequest) {
             success: true
         }
 
-        WindowModule.sendSuccess(Channel.FILE_CREATION, response);
+        WindowModule.sendSuccess(IpcChannel.FILE_CREATION, response);
         MainLoggingModule.logInfo("FileCreationRequestBehavior", `Resolved: ${request.filePath}`);
     } catch (e) {
         MainLoggingModule.logWarning("FileCreationRequestBehavior", `Could Not Create File: ${request.filePath}`);

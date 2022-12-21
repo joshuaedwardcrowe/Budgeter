@@ -1,4 +1,4 @@
-import {createLogger, format, Logger, LoggerOptions, transports} from "winston";
+import {createLogger, format, Logger, LoggerOptions, transports, addColors} from "winston";
 import LoggingLevel from "../models/LoggingLevel";
 
 class MainLoggingModule {
@@ -7,7 +7,6 @@ class MainLoggingModule {
     constructor() {
         const loggerOptions = MainLoggingModule.getOptions();
         this.logger = createLogger(loggerOptions);
-        this.addConsoleIfNotProduction();
     }
 
     log(level: LoggingLevel, locationName: string, message: string) {
@@ -25,27 +24,20 @@ class MainLoggingModule {
     logError(locationName: string, message: string) {
         this.log(LoggingLevel.ERROR, locationName, message);
     }
-
-    private addConsoleIfNotProduction() {
-        const consoleTransport = new transports.Console({
-            format: format.timestamp()
-        });
-        
-        this.logger.add(consoleTransport)
-    }
-
     private static getOptions(): LoggerOptions {
+        const consoleTransport = new transports.Console({
+            format: format.combine(format.colorize(), format.simple())
+        })
+
         return {
+            level: null,
             levels: {
                 "ok": 0,
                 "info": 1,
                 "warning": 2,
                 "error": 3
             },
-            format: format.combine(format.json(), format.timestamp()),
-//            transports: [
-//                new transports.File({ filename: constants.LOG_FILE_NAME })
-//            ]
+            transports: [ consoleTransport ]
         }
     }
 }

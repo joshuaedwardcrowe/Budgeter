@@ -1,29 +1,18 @@
-import { ROARR, Roarr} from "roarr";
+export default class RendererLoggingModule {
 
-class RendererLoggingModule {
-
-    constructor() {
-        ROARR.write = (message: string) => {
-            console.log(JSON.parse(message));
-        }
+    static logInfo(locationName: string, message: string): void {
+        console.log(`INFO: ${locationName} - ${message}`);
     }
 
-    logInfo(locationName: string, message: string): void {
-        Roarr.info(`${locationName} - ${message}`);
+    static logWarning(locationName: string, message: string): void {
+        console.log(`WARNING: $[locationName} - ${message}`)
     }
 
-    logWarning(locationName: string, message: string): void {
-        Roarr.warn(`$[locationName} - ${message}`)
+    static logError(locationName: string, message: string): void {
+        console.log(`ERRPR@ ${locationName} - ${message}`)
     }
 
-    logError(locationName: string, message: string): void {
-        Roarr.error(`${locationName} - ${message}`)
-    }
-
-    clear(): void {
+    static clear(): void {
         console.clear();
     }
 }
-
-
-export default new RendererLoggingModule();

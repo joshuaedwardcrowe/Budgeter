@@ -3,7 +3,7 @@ import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
-import Channel from "../../models/Channel";
+import IpcChannel from "../../models/IpcChannel";
 
 function sendContentFailureResponse() {
     const response: IFileContentResponse = {
@@ -11,7 +11,7 @@ function sendContentFailureResponse() {
         fileContent: null
     }
 
-    WindowModule.sendFailure(Channel.FILE_CONTENT, response)
+    WindowModule.sendFailure(IpcChannel.FILE_CONTENT, response)
 }
 
 export default async function (request: IFileContentRequest) {
@@ -31,7 +31,7 @@ export default async function (request: IFileContentRequest) {
             fileContent
         };
 
-        WindowModule.sendSuccess(Channel.FILE_CONTENT, message);
+        WindowModule.sendSuccess(IpcChannel.FILE_CONTENT, message);
     } catch (e) {
         MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File Content: ${request.filePath}`);
         sendContentFailureResponse();

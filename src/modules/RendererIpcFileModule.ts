@@ -5,17 +5,17 @@ import IFileContentRequest from "../models/file/IFIleContentRequest";
 import IFileContentResponse from "../models/file/IFileContentResponse";
 import IFileCreationRequest from "../models/file/IFileCreationRequest";
 import IResponse from "../models/IResponse";
-import Channel from "../models/Channel";
+import IpcChannel from "../models/IpcChannel";
 
 class RendererIpcFileModule extends RendererIpcModule {
     public async resolvePromptedForFilePath(): Promise<string> {
-        const response = await this.addIpcListeners<IFilePathPromptResponse>(Channel.PROMPT_FILE_PATH);
+        const response = await this.addIpcListeners<IFilePathPromptResponse>(IpcChannel.PROMPT_FILE_PATH);
         return response.filePath;
     }
 
     public askToPromptForFilePath(reasonForFilePath: string): void {
         const request: IFilePathPromptRequest = {
-            channel: Channel.PROMPT_FILE_PATH,
+            channel: IpcChannel.PROMPT_FILE_PATH,
             reasonForFilePath
         }
 
@@ -23,13 +23,13 @@ class RendererIpcFileModule extends RendererIpcModule {
     }
 
     public async resolveFileContent(): Promise<string> {
-        const response = await this.addIpcListeners<IFileContentResponse>(Channel.FILE_CONTENT);
+        const response = await this.addIpcListeners<IFileContentResponse>(IpcChannel.FILE_CONTENT);
         return response.fileContent;
     }
 
     public askForFileContent(filePath: string) {
         const request: IFileContentRequest = {
-            channel: Channel.FILE_CONTENT,
+            channel: IpcChannel.FILE_CONTENT,
             filePath
         };
 
@@ -37,12 +37,12 @@ class RendererIpcFileModule extends RendererIpcModule {
     }
 
     public async waitForFileCreation(): Promise<void> {
-        await this.addIpcListeners<IResponse>(Channel.FILE_CREATION);
+        await this.addIpcListeners<IResponse>(IpcChannel.FILE_CREATION);
     }
 
     public askForFileCreation(filePath: string, fileContent: string) {
         const request: IFileCreationRequest = {
-            channel: Channel.FILE_CREATION,
+            channel: IpcChannel.FILE_CREATION,
             filePath,
             fileContent
         }

@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 
 import MainLoggingModule from "./MainLoggingModule";
 import IWindowConfiguration from "../models/window/IWindowConfiguration";
 import IResponse from "../models/IResponse";
-import Channel from "../models/Channel";
+import IpcChannel from "../models/IpcChannel";
 
 const RESPONSE_FAILURE = "response_failure";
 const RESPONSE_SUCCESS = "response_success";
@@ -31,19 +31,19 @@ class WindowModule {
         return dialog.showOpenDialog(this.window, configuration);
     }
 
-    sendSuccess(channel: Channel, response: IResponse) {
+    sendSuccess(channel: IpcChannel, response: IResponse) {
         const channelKey: string = this.generateChannelKey(channel, RESPONSE_SUCCESS);
         MainLoggingModule.logInfo("WindowModule", `Sent: ${channelKey}`);
         this.window.webContents.send(channelKey, response);
     }
 
-    sendFailure(channel: Channel, response: IResponse) {
+    sendFailure(channel: IpcChannel, response: IResponse) {
         const channelKey: string = this.generateChannelKey(channel, RESPONSE_SUCCESS);
         MainLoggingModule.logWarning("WindowModule", `Sent: ${channelKey}`);
         this.window.webContents.send(channelKey, response);
     }
 
-    private generateChannelKey(channel: Channel, type: string): string {
+    private generateChannelKey(channel: IpcChannel, type: string): string {
         return `${channel}:${type}`;
     }
 }

@@ -1,5 +1,5 @@
-import Channel from "./Channel";
+import IpcChannel from "./IpcChannel";
 
 export default interface IRequest {
-    channel: Channel,
+    channel: IpcChannel,
 }
