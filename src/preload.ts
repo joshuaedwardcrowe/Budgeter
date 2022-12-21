@@ -1,19 +1,40 @@
 import { contextBridge } from "electron";
-import RendererFileModule from "./modules/RendererIpcFileModule";
-import RendererDirectoryModule from "./modules/RendererIpcDirectoryModule";
+import RendererIpcFileModule from "./modules/RendererIpcFileModule";
+import RendererIpcDirectoryModule from "./modules/RendererIpcDirectoryModule";
 
-// TODO: Handle error responses with Promise.race?
-contextBridge.exposeInMainWorld("controllers", {
-    storage: {
-        askToPromptForFilePath: RendererFileModule.askToPromptForFilePath.bind(RendererFileModule),
-        resolvePromptedForFilePath: RendererFileModule.resolvePromptedForFilePath.bind(RendererFileModule),
-        askForHomeDirectoryPath: RendererDirectoryModule.askForHomeDirectoryPath.bind(RendererDirectoryModule),
-        resolveHomeDirectoryPath: RendererDirectoryModule.resolveHomeDirectoryPath.bind(RendererDirectoryModule),
-        askForDirectoryContent: RendererDirectoryModule.askForDirectoryContent.bind(RendererDirectoryModule),
-        resolveDirectoryContent: RendererDirectoryModule.resolveDirectoryContent.bind(RendererDirectoryModule),
-        askForFileContent: RendererFileModule.askForFileContent.bind(RendererFileModule),
-        resolveFileContent: RendererFileModule.resolveFileContent.bind(RendererFileModule),
-        askForFileCreation: RendererFileModule.askForFileCreation.bind(RendererFileModule),
-        waitForFileCreation: RendererFileModule.waitForFileCreation.bind(RendererFileModule)
+const askToPromptForFilePath = RendererIpcFileModule.askToPromptForFilePath.bind(RendererIpcFileModule);
+const resolvePromptedForFilePath = RendererIpcFileModule.resolvePromptedForFilePath.bind(RendererIpcFileModule);
+const askForFileContent = RendererIpcFileModule.askForFileContent.bind(RendererIpcFileModule);
+const resolveFileContent = RendererIpcFileModule.resolveFileContent.bind(RendererIpcFileModule);
+const askForFileCreation = RendererIpcFileModule.askForFileCreation.bind(RendererIpcFileModule);
+const waitForFileCreation = RendererIpcFileModule.waitForFileCreation.bind(RendererIpcFileModule);
+
+const askForHomeDirectoryPath = RendererIpcDirectoryModule.askForHomeDirectoryPath.bind(RendererIpcDirectoryModule);
+const resolveHomeDirectoryPath = RendererIpcDirectoryModule.resolveHomeDirectoryPath.bind(RendererIpcDirectoryModule);
+const askForDirectoryContent = RendererIpcDirectoryModule.askForDirectoryContent.bind(RendererIpcDirectoryModule);
+const resolveDirectoryContent = RendererIpcDirectoryModule.resolveDirectoryContent.bind(RendererIpcDirectoryModule);
+
+contextBridge.exposeInMainWorld("modules", {
+    file: {
+        // PROMPT_FILE_PATH
+        askToPromptForFilePath,
+        resolvePromptedForFilePath,
+
+        // FILE_PATH
+        askForFileContent,
+        resolveFileContent,
+
+        // FILE_CREATION
+        askForFileCreation,
+        waitForFileCreation
+    },
+    directory: {
+        // HOME_DIRECTORY_PATH
+        askForHomeDirectoryPath,
+        resolveHomeDirectoryPath,
+
+        // DIRECTORT_CONTENT
+        askForDirectoryContent,
+        resolveDirectoryContent
     }
 });

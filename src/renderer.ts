@@ -18,10 +18,10 @@ createApp({
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
-            controllers.storage.askForDirectoryContent(exportSaveDirectoryPath);
+            modules.directory.askForDirectoryContent(exportSaveDirectoryPath);
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryPath}`);
 
-            const exportSaveDirectoryContent = await controllers.storage.resolveDirectoryContent();
+            const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent();
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryContent}`);
 
             const isExport = (filePath: string): filePath is string => SpendeeParserModule.checkFileIsExport(filePath);
@@ -36,10 +36,10 @@ createApp({
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Set ${this.exports.length} Exports`);
         },
         async askForSpendeeExport() {
-            controllers.storage.askToPromptForFilePath("Spendee Export");
+            modules.file.askToPromptForFilePath("Spendee Export");
             RendererLoggingModule.logInfo("askForSpendeeExport", "Asking For File Path to Spendee Export");
 
-            const filePath = await controllers.storage.resolvePromptedForFilePath();
+            const filePath = await modules.file.resolvePromptedForFilePath();
             RendererLoggingModule.logInfo("askForSpendeeExport", `Got Spendee Export File Path: ${filePath}`);
 
             const exportInfo = SpendeeParserModule.parseExportInfoFromFilePath(filePath);
@@ -48,25 +48,25 @@ createApp({
 
             const exportSaveDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${exportInfo.fileName}.csv`;
 
-            controllers.storage.askForFileContent(filePath);
+            modules.file.askForFileContent(filePath);
             RendererLoggingModule.logInfo("askForSpendeeExport", `Asked for File Content: ${filePath}`);
 
-            const fileContent = await controllers.storage.resolveFileContent();
+            const fileContent = await modules.file.resolveFileContent();
             RendererLoggingModule.logInfo("askForSpendeeExport", `Got File Content: ${filePath}`);
 
-            controllers.storage.askForFileCreation(exportSaveDirectoryPath, fileContent);
+            modules.file.askForFileCreation(exportSaveDirectoryPath, fileContent);
             RendererLoggingModule.logInfo("askForSpendeeExport", `Ask For File Creation: ${exportSaveDirectoryPath}`);
 
-            await controllers.storage.waitForFileCreation();
+            await modules.file.waitForFileCreation();
             RendererLoggingModule.logInfo("askForSpendeeExport", `File Created: ${exportSaveDirectoryPath}`);
 
             this.exports = [exportInfo, ...this.exports]
         },
         async getHomeDirectoryPath() {
-            controllers.storage.askForHomeDirectoryPath();
+            modules.directory.askForHomeDirectoryPath();
             RendererLoggingModule.logInfo("getHomeDirectoryPath", "Asked for Home Directory Path");
 
-            const homeDirectoryPath = await controllers.storage.resolveHomeDirectoryPath();
+            const homeDirectoryPath = await modules.directory.resolveHomeDirectoryPath();
             RendererLoggingModule.logInfo("getHomeDirectoryPath", `Got Home Directory Path: ${homeDirectoryPath}`);
 
             return homeDirectoryPath;

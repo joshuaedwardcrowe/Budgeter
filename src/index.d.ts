@@ -1,1 +1,1 @@
-declare const controllers: typeof import("controllers").default;
+declare const modules: typoef import("modules").default
