@@ -5,6 +5,7 @@ import StorageModule from "../../modules/StorageModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
+import Channel from "../../models/Channel";
 
 export default async function (request: IFilePathPromptRequest) {
     MainLoggingModule.logInfo("FilePathRequestBehavior", `Got Request for ${request.reasonForFilePath}`);
@@ -27,19 +28,19 @@ export default async function (request: IFilePathPromptRequest) {
     if (result.canceled) {
         MainLoggingModule.logWarning("FilePathRequestBehavior", "File Dialog Closed");
 
-        const message: IFilePathPromptResponse = {
+        const response: IFilePathPromptResponse = {
             success: false,
             filePath: null
         };
 
-        WindowModule.send(constants.IPC_PROMPT_FILE_PATH_FAILURE_RESPONSE, message);
+        WindowModule.sendFailure(Channel.PROMPT_FILE_PATH, response);
         return;
     }
 
-    const message: IFilePathPromptResponse = {
+    const response: IFilePathPromptResponse = {
         success: true,
         filePath: result.filePaths.pop()
     }
 
-    WindowModule.send(constants.IPC_PROMPT_FILE_PATH_SUCCESS_RESPONSE, message)
+    WindowModule.sendSuccess(Channel.PROMPT_FILE_PATH, response)
 }

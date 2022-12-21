@@ -3,7 +3,7 @@ import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
-import {IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE, IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE} from "../../constants";
+import Channel from "../../models/Channel";
 
 function sendContentFailureResponse() {
     const response: IDirectoryContentResponse = {
@@ -11,7 +11,7 @@ function sendContentFailureResponse() {
         directoryContent: []
     }
 
-    WindowModule.send(IPC_DIRECTORY_CONTENT_FAILURE_RESPONSE, response);
+    WindowModule.sendFailure(Channel.DIRECTORY_CONTENT, response);
 }
 
 export default async function (request: IDirectoryContentRequest) {
@@ -31,7 +31,7 @@ export default async function (request: IDirectoryContentRequest) {
             directoryContent
         };
 
-        WindowModule.send(IPC_DIRECTORY_CONTENT_SUCCESS_RESPONSE, response);
+        WindowModule.sendSuccess(Channel.DIRECTORY_CONTENT, response);
         MainLoggingModule.logInfo("DirectoryContentRequestBehavior", `Resolved: ${response.directoryContent}`);
     } catch (e) {
         MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `Failed Read Directory Content: ${request.directoryPath}`);

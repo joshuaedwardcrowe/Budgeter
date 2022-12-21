@@ -7,7 +7,7 @@ import IFileCreationRequest from "../models/file/IFileCreationRequest";
 import IResponse from "../models/IResponse";
 import Channel from "../models/Channel";
 
-class RendererFileModule extends RendererIpcModule {
+class RendererIpcFileModule extends RendererIpcModule {
     public async prepareForPromptedFilePath(): Promise<string> {
         const response = await this.addIpcListeners<IFilePathPromptResponse>(Channel.PROMPT_FILE_PATH);
         return response.filePath;
@@ -51,4 +51,4 @@ class RendererFileModule extends RendererIpcModule {
     }
 }
 
-export default new RendererFileModule();
+export default new RendererIpcFileModule();

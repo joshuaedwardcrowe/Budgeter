@@ -3,15 +3,15 @@ import StorageModule from "../../modules/StorageModule";
 import WindowModule from "../../modules/WindowModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
-import * as constants from "../../constants";
+import Channel from "../../models/Channel";
 
 function sendContentFailureResponse() {
-    const message: IFileContentResponse = {
+    const response: IFileContentResponse = {
         success: false,
         fileContent: null
     }
 
-    WindowModule.window.webContents.send(constants.IPC_FILE_CONTENT_FAILURE_RESPONSE, message);
+    WindowModule.sendFailure(Channel.FILE_CONTENT, response)
 }
 
 export default async function (request: IFileContentRequest) {
@@ -31,7 +31,7 @@ export default async function (request: IFileContentRequest) {
             fileContent
         };
 
-        WindowModule.send(constants.IPC_FILE_CONTENT_SUCCESS_RESPONSE, message);
+        WindowModule.sendSuccess(Channel.FILE_CONTENT, message);
     } catch (e) {
         MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File Content: ${request.filePath}`);
         sendContentFailureResponse();
