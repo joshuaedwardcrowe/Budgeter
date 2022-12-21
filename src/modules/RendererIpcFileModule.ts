@@ -8,7 +8,7 @@ import IResponse from "../models/IResponse";
 import Channel from "../models/Channel";
 
 class RendererIpcFileModule extends RendererIpcModule {
-    public async prepareForPromptedFilePath(): Promise<string> {
+    public async resolvePromptedForFilePath(): Promise<string> {
         const response = await this.addIpcListeners<IFilePathPromptResponse>(Channel.PROMPT_FILE_PATH);
         return response.filePath;
     }
@@ -22,7 +22,7 @@ class RendererIpcFileModule extends RendererIpcModule {
         this.sendIpcMessage(request.channel, request);
     }
 
-    public async prepareForFileContent(): Promise<string> {
+    public async resolveFileContent(): Promise<string> {
         const response = await this.addIpcListeners<IFileContentResponse>(Channel.FILE_CONTENT);
         return response.fileContent;
     }
@@ -36,7 +36,7 @@ class RendererIpcFileModule extends RendererIpcModule {
         this.sendIpcMessage(request.channel, request);
     }
 
-    public async prepareForFileCreation(): Promise<void> {
+    public async waitForFileCreation(): Promise<void> {
         await this.addIpcListeners<IResponse>(Channel.FILE_CREATION);
     }
 

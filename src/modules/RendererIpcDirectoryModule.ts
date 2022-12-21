@@ -5,7 +5,7 @@ import IDirectoryContentResponse from "../models/directory/IDirectoryContentResp
 import Channel from "../models/Channel";
 
 class RendererIpcDirectoryModule extends RendererIpcModule {
-    public async prepareForHomeDirectoryPath(): Promise<string> {
+    public async resolveHomeDirectoryPath(): Promise<string> {
         const response = await this.addIpcListeners<IHomeDirectoryPathResponse>(Channel.HOME_DIRECTORY_PATH);
         return response.homeDirectoryPath;
     }
@@ -14,7 +14,7 @@ class RendererIpcDirectoryModule extends RendererIpcModule {
         this.sendIpcMessage(Channel.HOME_DIRECTORY_PATH);
     }
 
-    public async prepareForDirectoryContent(): Promise<string[]> {
+    public async resolveDirectoryContent(): Promise<string[]> {
         const response = await this.addIpcListeners<IDirectoryContentResponse>(Channel.DIRECTORY_CONTENT);
         return response.directoryContent;
     }
