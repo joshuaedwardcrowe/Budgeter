@@ -21,11 +21,11 @@ class RendererIpcDirectoryModule extends RendererIpcModule {
 
     public askForDirectoryContent(directoryPath: string): void {
         const request: IDirectoryContentRequest = {
-            channel: IpcKey.DIRECTORY_CONTENT,
+            key: IpcKey.DIRECTORY_CONTENT,
             directoryPath
         };
 
-        this.sendIpcMessage(request.channel, request);
+        this.sendIpcMessage(request.key, request);
     }
 
 }

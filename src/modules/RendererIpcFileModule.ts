@@ -16,11 +16,11 @@ class RendererIpcFileModule extends RendererIpcModule {
 
     public askToPromptForFilePath(reasonForFilePath: string): void {
         const request: IFilePathPromptRequest = {
-            channel: IpcKey.PROMPT_FILE_PATH,
+            key: IpcKey.PROMPT_FILE_PATH,
             reasonForFilePath
         }
 
-        this.sendIpcMessage(request.channel, request);
+        this.sendIpcMessage(request.key, request);
     }
 
     public async resolveFileContent(): Promise<string> {
@@ -30,11 +30,11 @@ class RendererIpcFileModule extends RendererIpcModule {
 
     public askForFileContent(filePath: string) {
         const request: IFileContentRequest = {
-            channel: IpcKey.FILE_CONTENT,
+            key: IpcKey.FILE_CONTENT,
             filePath
         };
 
-        this.sendIpcMessage(request.channel, request);
+        this.sendIpcMessage(request.key, request);
     }
 
     public async waitForFileCreation(): Promise<void> {
@@ -43,12 +43,12 @@ class RendererIpcFileModule extends RendererIpcModule {
 
     public askForFileCreation(filePath: string, fileContent: string) {
         const request: IFileCreationRequest = {
-            channel: IpcKey.FILE_CREATION,
+            key: IpcKey.FILE_CREATION,
             filePath,
             fileContent
         }
 
-        this.sendIpcMessage(request.channel, request);
+        this.sendIpcMessage(request.key, request);
     }
 
     public async waitForFileDeletion(): Promise<void> {
@@ -57,11 +57,11 @@ class RendererIpcFileModule extends RendererIpcModule {
 
     public askForFileDeletion(filePath: string) {
         const request: IFileDeletionRequest = {
-            channel: IpcKey.FILE_DELETION,
+            key: IpcKey.FILE_DELETION,
             filePath
         };
 
-        this.sendIpcMessage(request.channel, request);
+        this.sendIpcMessage(request.key, request);
     }
 }
 

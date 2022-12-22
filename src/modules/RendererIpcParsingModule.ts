@@ -7,11 +7,11 @@ import IpcKey from "../models/IpcKey";
 class RendererIpcParsingModule extends RendererIpcModule {
     public askForSpendeeExportParsing(exportFilePath: string): void {
         const request: ISpendeeExportParsingRequest = {
-            channel: IpcKey.SPENDEE_EXPORT_PARSING,
+            key: IpcKey.SPENDEE_EXPORT_PARSING,
             exportFilePath: exportFilePath
         };
 
-        this.sendIpcMessage<ISpendeeExportParsingRequest>(request.channel, request);
+        this.sendIpcMessage<ISpendeeExportParsingRequest>(request.key, request);
     }
     public async resolveSpendeeExportParsing(): Promise<ITransaction[]> {
         const response = await this.addIpcListeners<ISpendeeExportParsingResponse>(IpcKey.SPENDEE_EXPORT_PARSING);
