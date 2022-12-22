@@ -1,7 +1,7 @@
 import RendererIpcModule from "./RendererIpcModule";
 import ISpendeeExportParsingRequest from "../models/parsing/ISpendeeExportParsingRequest";
 import ISpendeeExportParsingResponse from "../models/parsing/ISpendeeExportParsingResponse";
-import ISpendeeExport from "../models/ISpendeeExport";
+import ITransaction from "../models/ITransaction";
 import IpcKey from "../models/IpcKey";
 
 class RendererIpcParsingModule extends RendererIpcModule {
@@ -13,9 +13,9 @@ class RendererIpcParsingModule extends RendererIpcModule {
 
         this.sendIpcMessage<ISpendeeExportParsingRequest>(request.channel, request);
     }
-    public async resolveSpendeeExportParsing(): Promise<ISpendeeExport[]> {
+    public async resolveSpendeeExportParsing(): Promise<ITransaction[]> {
         const response = await this.addIpcListeners<ISpendeeExportParsingResponse>(IpcKey.SPENDEE_EXPORT_PARSING);
-        return response.exports;
+        return response.transactions;
     }
 }
 

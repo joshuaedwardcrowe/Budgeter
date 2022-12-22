@@ -1,5 +1,7 @@
+import TransactionType from "../transaction/TransactionType";
+
 export default interface IBudgetCategory {
     name: string,
-    type: string,
+    type: TransactionType,
     amount: number
 }

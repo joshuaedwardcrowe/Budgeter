@@ -1,7 +1,9 @@
-export default interface ISpendeeExport {
+import TransactionType from "./TransactionType";
+
+export default interface ITransaction {
     date: Date,
     wallet: string,
-    type: string,
+    type: TransactionType,
     categoryName: string,
     amount: number,
     currency: string,

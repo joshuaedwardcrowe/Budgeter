@@ -1,8 +1,8 @@
-import {parseString} from 'fast-csv';
+import { parseString } from 'fast-csv';
 import ISpendeeExportParsingRequest from "../../models/parsing/ISpendeeExportParsingRequest";
 import StorageModule from "../../modules/StorageModule";
-import ISpendeeExport from "../../models/ISpendeeExport";
-import SpendeeExportMapper from "../../mappers/SpendeeExportMapper";
+import ITransaction from "../../models/transaction/ITransaction";
+import TransactionMapper from "../../mappers/TransactionMapper";
 import MainIcpModule from "../../modules/MainIcpModule";
 import IpcKey from "../../models/IpcKey";
 import MainLoggingModule from "../../modules/MainLoggingModule";
@@ -23,7 +23,7 @@ export default async function (request: ISpendeeExportParsingRequest) {
     MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `Got File: ${request.exportFilePath}`);
 
     const parser = parseString(content);
-    const spendeeExports: ISpendeeExport[] = [];
+    const transactions: ITransaction[] = [];
 
     parser.on(CSV_PARSING_ERROR, error => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Failed: ${error}`);
@@ -32,19 +32,21 @@ export default async function (request: ISpendeeExportParsingRequest) {
 
     parser.on(CSV_PARSING_DATA, row => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Got Data: ${row}`);
-        const spendeeExport = SpendeeExportMapper.fromCSVRow(row);
-        spendeeExports.push(spendeeExport);
+        const transaction = TransactionMapper.fromCSVRow(row);
+        console.log(transaction);
+
+        transactions.push(transaction);
     });
 
     parser.on(CSV_PARSING_END, (rowCount: number) => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Completed: ${rowCount} Rows`);
 
-        spendeeExports.shift();
+        transactions.shift();
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Removing Header Row`);
 
         const response: ISpendeeExportParsingResponse = {
             success: true,
-            exports: spendeeExports
+            transactions
         };
 
         MainIcpModule.sendSuccess(IpcKey.SPENDEE_EXPORT_PARSING, response);

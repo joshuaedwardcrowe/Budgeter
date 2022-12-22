@@ -11,18 +11,47 @@
             Current Budget:
 
             <h1>History</h1>
+
+            <h2>Income</h2>
             <table>
             <tr>
                 <th>Budget Name</th>
                 <th>Budget Type</th>
                 <th>Budget Amount</th>
             </tr>
-            <tr v-for="budgetHistory in currentBudget.history">
+            <tr v-for="budgetHistory in currentBudgetHistoricalIncome">
                 <td>{{budgetHistory.name}}</td>
                 <td>{{budgetHistory.type}}</td>
-                <td>{{budgetHistory.amount}}</td>
+                <td>£{{budgetHistory.amount}}</td>
             </tr>
             </table>
+
+            <h2>Expense</h2>
+            <table>
+            <tr>
+                <th>Budget Name</th>
+                <th>Budget Type</th>
+                <th>Budget Amount</th>
+            </tr>
+            <tr v-for="budgetHistory in currentBudgetHistoricalExpense">
+                <td>{{budgetHistory.name}}</td>
+                <td>{{budgetHistory.type}}</td>
+                <td>£{{budgetHistory.amount}}</td>
+            </tr>
+            </table>
+
+            <h2>Summary</h2>
+            <table>
+            <tr>
+                <th>Income Total</th>
+                                <th>Income Expense</th>
+            </tr>
+            <tr>
+                <td>{{currentBudgetHistoricalIncomeTotal}}</td>
+                <td>{{currentBudgetHistoricalExpenseTotal}}</td>
+            </tr>
+            </table>
+
         </div>
         <div v-else>
             <button @click="askForSpendeeExport">Add Export</button>

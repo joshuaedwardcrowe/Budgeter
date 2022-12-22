@@ -1,6 +1,6 @@
 import IResponse from "../IResponse"
-import ISpendeeExport from "../ISpendeeExport";
+import ITransaction from "../../models/transaction/ITransaction"
 
 export default interface ISpendeeExportParsingResponse extends IResponse {
-    exports: ISpendeeExport[]
+    transactions: ITransaction[]
 }

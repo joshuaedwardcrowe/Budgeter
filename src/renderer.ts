@@ -1,29 +1,50 @@
 import './index.css';
-import { createApp } from "vue";
+import {createApp} from "vue";
 import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
 import RendererLoggingModule from "./modules/RendererLoggingModule";
-import ISpendeeExport from "./models/ISpendeeExport";
-import BudgetMapper from "./mappers/BudgetMapper";
+import ITransaction from "./models/transaction/ITransaction";
+import BudgetCategoryMapper from "./mappers/BudgetCategoryMapper";
+import IBudget from "./models/budget/IBudget";
+import TransactionType from "./models/transaction/TransactionType";
 
 createApp({
     data: () => ({
         currentBudget: null,
         spendeeExports: [],
-        homeDirectoryPath: null,
+        homeDirectoryPath: null
     }),
-    mounted: async function() {
-        await this.getExistingSpendeeExports();
+    mounted: async function() { await this.getExistingSpendeeExports(); },
+    computed: {
+        // TODO: These need cleaning up.
+        currentBudgetHistoricalIncome(): ITransaction[] {
+            const currentBudget: IBudget = this.currentBudget;
+            return currentBudget.history.filter(h => h.type === TransactionType.Income);
         },
+        currentBudgetHistoricalIncomeTotal(): number {
+            return this.currentBudgetHistoricalIncome.reduce<number>((a, n) => a + n.amount, 0);
+        },
+        currentBudgetHistoricalExpense(): ITransaction[] {
+            const currentBudget: IBudget = this.currentBudget;
+            return currentBudget.history.filter(h => h.type === TransactionType.Expense);
+        },
+        currentBudgetHistoricalExpenseTotal(): number {
+            return this.currentBudgetHistoricalExpense.reduce<number>((a, n) => a + n.amount, 0);
+        },
+    },
     methods: {
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
 
             modules.parsing.askForSpendeeExportParsing(spendeeExportPath);
-            const spendeeExports: ISpendeeExport[] = await modules.parsing.resolveSpendeeExportParsing();
+            const transactions: ITransaction[] = await modules.parsing.resolveSpendeeExportParsing();
 
-            this.currentBudget = BudgetMapper.fromSpendeeExports(spendeeExports);
+            const history = BudgetCategoryMapper.fromTransactions(transactions);
+
+            this.currentBudget =  {
+                history
+            };
         },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
