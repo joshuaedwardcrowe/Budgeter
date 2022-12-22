@@ -7,6 +7,7 @@ import FilePathRequestBehavior from "./behaviors/file/FilePathRequestBehavior";
 import HomeDirectoryPathRequestBehavior from "./behaviors/directory/HomeDirectoryPathRequestBehavior";
 import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
 import FileCreationRequestBehavior from "./behaviors/file/FileCreationRequestBehavior";
+import FileDeletionRequestBehavior from "./behaviors/file/FileDeletionRequestBehavior";
 import DirectoryContentRequestBehavior from "./behaviors/directory/DirectoryContentRequestBehavior";
 import SpendeeExportParsingBehavior from "./behaviors/parsing/SpendeeExportParsingBehavior";
 import * as constants from "./constants";
@@ -36,7 +37,8 @@ ipcMain.on(constants.IPC_PROMPT_FILE_PATH_REQUEST, (_, request) => FilePathReque
 ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, () => HomeDirectoryPathRequestBehavior())
 ipcMain.on(constants.IPC_FILE_CONTENT_REQUEST, (_, request) => FileContentRequestBehavior(request));
 ipcMain.on(constants.IPC_FILE_CREATION_REQUEST, (_, request) => FileCreationRequestBehavior(request));
+ipcMain.on(`${IpcKey.FILE_DELETION}:${IpcStatus.REQUEST}`, (_, request) => FileDeletionRequestBehavior(request));
 ipcMain.on(constants.IPC_DIRECTORY_CONTENT_REQUEST, (_, request) => DirectoryContentRequestBehavior(request));
-ipcMain.on(`${IpcKey.SPENDEE_EXPORT_PARSING}:${IpcStatus.REQUEST}`, (_, request) => SpendeeExportParsingBehavior(request))
+ipcMain.on(`${IpcKey.SPENDEE_EXPORT_PARSING}:${IpcStatus.REQUEST}`, (_, request) => SpendeeExportParsingBehavior(request));
 
 MainLoggingModule.logInfo("Index", "IPC Listeners Attached");

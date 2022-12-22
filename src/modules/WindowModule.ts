@@ -1,9 +1,5 @@
 import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
-import MainLoggingModule from "./MainLoggingModule";
 import IWindowConfiguration from "../models/window/IWindowConfiguration";
-import IResponse from "../models/IResponse";
-import IpcKey from "../models/IpcKey";
-import IpcStatus from "../models/IpcStatus";
 
 class WindowModule {
     window: BrowserWindow;
@@ -27,26 +23,6 @@ class WindowModule {
 
     showOpenFileDialog(configuration: OpenDialogOptions): Promise<OpenDialogReturnValue> {
         return dialog.showOpenDialog(this.window, configuration);
-    }
-
-    sendSuccess(channel: IpcKey, response: IResponse) {
-        const channelKey: string = this.generateChannelKey(channel, IpcStatus.SUCCESS);
-        MainLoggingModule.logInfo("WindowModule", `Sent: ${channelKey}`);
-        this.window.webContents.send(channelKey, response);
-    }
-
-    sendFailure(channel: IpcKey, response?: IResponse) {
-        if (!response) {
-            response = { success: false }
-        }
-
-        const channelKey: string = this.generateChannelKey(channel, IpcStatus.FAILURE);
-        MainLoggingModule.logWarning("WindowModule", `Sent: ${channelKey}`);
-        this.window.webContents.send(channelKey, response);
-    }
-
-    private generateChannelKey(channel: IpcKey, status: IpcStatus): string {
-        return `${channel}:${status}`;
     }
 }
 

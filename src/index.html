@@ -11,6 +11,7 @@
             Current Budget:
 
             <h1>History</h1>
+            <button @click="backToHome">Back to Home</button>
 
             <h2>Income</h2>
             <table>
@@ -32,11 +33,15 @@
                 <th>Budget Name</th>
                 <th>Budget Type</th>
                 <th>Budget Amount</th>
+                <th>Review Transactions</th>
             </tr>
             <tr v-for="budgetHistory in currentBudget.history.getExpenseCategories()">
                 <td>{{budgetHistory.name}}</td>
                 <td>{{budgetHistory.type}}</td>
                 <td>£{{budgetHistory.getTotalAmount()}}</td>
+                <td>
+                    <button>Review Transactions</button>
+                </td>
             </tr>
             </table>
 
@@ -62,12 +67,16 @@
                     <th>Account</th>
                     <th>Added</th>
                     <th>Open</th>
+                    <th>Delete</th>
                 </tr>
                 <tr v-for="spendeeExport in spendeeExports">
                     <td>{{spendeeExport.accountName}}</td>
                     <td>{{spendeeExport.created}}</td>
                     <td>
                         <button @click="createNewBudget(spendeeExport)">Create New Budget</button>
+                    </td>
+                    <td>
+                        <button @click="deleteSpendeeExport(spendeeExport)">Delete Spendee Export</button>
                     </td>
                 </tr>
             </table>

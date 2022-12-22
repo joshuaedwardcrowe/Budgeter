@@ -9,6 +9,8 @@ const askForFileContent = RendererIpcFileModule.askForFileContent.bind(RendererI
 const resolveFileContent = RendererIpcFileModule.resolveFileContent.bind(RendererIpcFileModule);
 const askForFileCreation = RendererIpcFileModule.askForFileCreation.bind(RendererIpcFileModule);
 const waitForFileCreation = RendererIpcFileModule.waitForFileCreation.bind(RendererIpcFileModule);
+const askForFileDeletion = RendererIpcFileModule.askForFileDeletion.bind(RendererIpcFileModule);
+const waitForFileDeletion = RendererIpcFileModule.waitForFileDeletion.bind(RendererIpcFileModule);
 
 const askForHomeDirectoryPath = RendererIpcDirectoryModule.askForHomeDirectoryPath.bind(RendererIpcDirectoryModule);
 const resolveHomeDirectoryPath = RendererIpcDirectoryModule.resolveHomeDirectoryPath.bind(RendererIpcDirectoryModule);
@@ -30,7 +32,11 @@ contextBridge.exposeInMainWorld("modules", {
 
         // FILE_CREATION
         askForFileCreation,
-        waitForFileCreation
+        waitForFileCreation,
+
+        // FILE_DELETION
+        askForFileDeletion,
+        waitForFileDeletion
     },
     directory: {
         // HOME_DIRECTORY_PATH

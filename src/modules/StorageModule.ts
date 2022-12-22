@@ -32,6 +32,10 @@ class StorageModule {
         return fs.readFile(filePath, TEXT_ENCODING);
     }
 
+    public static deleteFile(filePath: string): Promise<void> {
+        return fs.unlink(filePath);
+    }
+
     private static async _tryCheckFileSystemObjectExists(filePath: string): Promise<boolean> {
         try {
             await fs.access(filePath);

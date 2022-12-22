@@ -6,6 +6,7 @@ import IFileContentResponse from "../models/file/IFileContentResponse";
 import IFileCreationRequest from "../models/file/IFileCreationRequest";
 import IResponse from "../models/IResponse";
 import IpcKey from "../models/IpcKey";
+import IFileDeletionRequest from "../models/file/IFileDeletionRequest";
 
 class RendererIpcFileModule extends RendererIpcModule {
     public async resolvePromptedForFilePath(): Promise<string> {
@@ -46,6 +47,19 @@ class RendererIpcFileModule extends RendererIpcModule {
             filePath,
             fileContent
         }
+
+        this.sendIpcMessage(request.channel, request);
+    }
+
+    public async waitForFileDeletion(): Promise<void> {
+        await this.addIpcListeners<IResponse>(IpcKey.FILE_DELETION);
+    }
+
+    public askForFileDeletion(filePath: string) {
+        const request: IFileDeletionRequest = {
+            channel: IpcKey.FILE_DELETION,
+            filePath
+        };
 
         this.sendIpcMessage(request.channel, request);
     }

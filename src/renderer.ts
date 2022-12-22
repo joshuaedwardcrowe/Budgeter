@@ -9,7 +9,6 @@ import Budget from "./models/budget/Budget";
 import BudgetHistory from "./models/budget/BudgetHistory";
 import TransactionType from "./models/transaction/TransactionType";
 
-// TODO: Step 1 is to make the transactions be encapsulated in the budget model.
 // TODO: Step 2 is to store the Budget model generated from CSV in a JSON file.
 
 
@@ -21,6 +20,9 @@ createApp({
     }),
     mounted: async function() { await this.getExistingSpendeeExports(); },
     methods: {
+        backToHome() {
+            this.currentBudget = null;
+        },
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
@@ -32,7 +34,15 @@ createApp({
             const history = new BudgetHistory(categories);
 
             this.currentBudget = new Budget(history);
-            console.log(this.currentBudget);
+        },
+        async deleteSpendeeExport(info: ISpendeeExportInfo) {
+            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
+
+            modules.file.askForFileDeletion(spendeeExportPath);
+            await modules.file.waitForFileDeletion();
+
+            this.spendeeExports = this.spendeeExports.filter(se => !se.fileName == info.fileName);
         },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
