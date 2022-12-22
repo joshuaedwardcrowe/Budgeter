@@ -5,8 +5,13 @@ import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
 import RendererLoggingModule from "./modules/RendererLoggingModule";
 import ITransaction from "./models/transaction/ITransaction";
 import BudgetCategoryMapper from "./mappers/BudgetCategoryMapper";
-import IBudget from "./models/budget/IBudget";
+import Budget from "./models/budget/Budget";
+import BudgetHistory from "./models/budget/BudgetHistory";
 import TransactionType from "./models/transaction/TransactionType";
+
+// TODO: Step 1 is to make the transactions be encapsulated in the budget model.
+// TODO: Step 2 is to store the Budget model generated from CSV in a JSON file.
+
 
 createApp({
     data: () => ({
@@ -15,23 +20,6 @@ createApp({
         homeDirectoryPath: null
     }),
     mounted: async function() { await this.getExistingSpendeeExports(); },
-    computed: {
-        // TODO: These need cleaning up.
-        currentBudgetHistoricalIncome(): ITransaction[] {
-            const currentBudget: IBudget = this.currentBudget;
-            return currentBudget.history.filter(h => h.type === TransactionType.Income);
-        },
-        currentBudgetHistoricalIncomeTotal(): number {
-            return this.currentBudgetHistoricalIncome.reduce<number>((a, n) => a + n.amount, 0);
-        },
-        currentBudgetHistoricalExpense(): ITransaction[] {
-            const currentBudget: IBudget = this.currentBudget;
-            return currentBudget.history.filter(h => h.type === TransactionType.Expense);
-        },
-        currentBudgetHistoricalExpenseTotal(): number {
-            return this.currentBudgetHistoricalExpense.reduce<number>((a, n) => a + n.amount, 0);
-        },
-    },
     methods: {
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
@@ -40,11 +28,11 @@ createApp({
             modules.parsing.askForSpendeeExportParsing(spendeeExportPath);
             const transactions: ITransaction[] = await modules.parsing.resolveSpendeeExportParsing();
 
-            const history = BudgetCategoryMapper.fromTransactions(transactions);
+            const categories = BudgetCategoryMapper.fromTransactions(transactions);
+            const history = new BudgetHistory(categories);
 
-            this.currentBudget =  {
-                history
-            };
+            this.currentBudget = new Budget(history);
+            console.log(this.currentBudget);
         },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();

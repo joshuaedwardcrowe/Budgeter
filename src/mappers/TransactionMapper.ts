@@ -19,13 +19,14 @@ export default class TransactionMapper {
     static fromCSVRow(row: string[]): ITransaction {
         const chosenType = row[INDEX_OF_TYPE] as keyof typeof TransactionType;
         const chosenCurrency = row[INDEX_OF_CURRENCY] as keyof typeof TransactionCurrency;
+        const parsedAmount = parseInt(row[INDEX_OF_AMOUNT], 10);
 
         const date = new Date(INDEX_OF_DATE);
         const type = TransactionType[chosenType];
-        const amount = parseInt(row[INDEX_OF_AMOUNT], 10);
+        const amount = Math.abs(parsedAmount);
         const currency = TransactionCurrency[chosenCurrency];
         const labels = row[INDEX_OF_LABELS].split(LABELS_SEPARATOR);
-
+        
         return {
             date,
             wallet: row[INDEX_OF_WALLET],

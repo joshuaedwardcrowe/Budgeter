@@ -19,10 +19,10 @@
                 <th>Budget Type</th>
                 <th>Budget Amount</th>
             </tr>
-            <tr v-for="budgetHistory in currentBudgetHistoricalIncome">
-                <td>{{budgetHistory.name}}</td>
-                <td>{{budgetHistory.type}}</td>
-                <td>£{{budgetHistory.amount}}</td>
+            <tr v-for="historicalBudget in currentBudget.history.getIncomeCategories()">
+                <td>{{historicalBudget.name}}</td>
+                <td>{{historicalBudget.type}}</td>
+                <td>£{{historicalBudget.getTotalAmount()}}</td>
             </tr>
             </table>
 
@@ -33,10 +33,10 @@
                 <th>Budget Type</th>
                 <th>Budget Amount</th>
             </tr>
-            <tr v-for="budgetHistory in currentBudgetHistoricalExpense">
+            <tr v-for="budgetHistory in currentBudget.history.getExpenseCategories()">
                 <td>{{budgetHistory.name}}</td>
                 <td>{{budgetHistory.type}}</td>
-                <td>£{{budgetHistory.amount}}</td>
+                <td>£{{budgetHistory.getTotalAmount()}}</td>
             </tr>
             </table>
 
@@ -44,11 +44,13 @@
             <table>
             <tr>
                 <th>Income Total</th>
-                                <th>Income Expense</th>
+                <th>Expense Total</th>
+                <th>Cash Flow</th>
             </tr>
             <tr>
-                <td>{{currentBudgetHistoricalIncomeTotal}}</td>
-                <td>{{currentBudgetHistoricalExpenseTotal}}</td>
+                <td>£{{currentBudget.history.getIncomeTotalAmount()}}</td>
+                <td>£{{currentBudget.history.getExpenseTotalAmount()}}</td>
+                <td>£{{currentBudget.history.getCashFlow()}}</td>
             </tr>
             </table>
 

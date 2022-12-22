@@ -33,8 +33,6 @@ export default async function (request: ISpendeeExportParsingRequest) {
     parser.on(CSV_PARSING_DATA, row => {
         MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Got Data: ${row}`);
         const transaction = TransactionMapper.fromCSVRow(row);
-        console.log(transaction);
-
         transactions.push(transaction);
     });
 
