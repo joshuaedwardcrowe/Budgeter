@@ -1,5 +1,7 @@
+import IpcSource from "./IpcSource";
 import IpcKey from "./IpcKey";
 
 export default interface IRequest {
-    key: IpcKey,
+    source: IpcSource;
+    key: IpcKey;
 }

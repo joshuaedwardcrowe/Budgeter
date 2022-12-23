@@ -1,19 +1,18 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import MainIcpModule from "../../modules/MainIcpModule";
+import MainIpcModule from "../../modules/MainIpcModule";
 import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
-import IpcKey from "../../models/IpcKey";
-import { CONFIG_FOLDER_NAME } from "../../constants";
+import IRequest from "../../models/IRequest";
 
-export default function () {
-    const operatingSystemHomeDirectoryPath = StorageModule.getOperatingSystemHomeDirectoryPath();
-    const homeDirectoryPath = `${operatingSystemHomeDirectoryPath}/${CONFIG_FOLDER_NAME}`;
+export default function ({ source, key }: IRequest) {
+    const homeDirectoryPath = StorageModule.getHomeDirectoryPath();
 
-    const response: IHomeDirectoryPathResponse = {
+    MainIpcModule.sendSuccess<IHomeDirectoryPathResponse>({
+        source,
+        key,
         success: true,
         homeDirectoryPath
-    }
+    });
 
-    MainIcpModule.sendSuccess(IpcKey.HOME_DIRECTORY_PATH, response);
-    MainLoggingModule.logInfo("HomeDirectoryPathRequestBehavior", `Resolved: ${response.homeDirectoryPath}`);
+    MainLoggingModule.logInfo(source, "HomeDirectoryPathRequestBehavior", `Resolved: ${homeDirectoryPath}`);
 }

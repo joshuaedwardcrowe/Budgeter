@@ -3,7 +3,7 @@ import * as constants from '../constants';
 import StorageModule from '../modules/StorageModule';
 import IBudgeterConfiguration from "../models/IBudgeterConfiguration";
 
-const HOME_DIR = StorageModule.getOperatingSystemHomeDirectoryPath();
+const HOME_DIR = StorageModule.getHomeDirectoryPath();
 const HOME_CONFIG_FOLDER_PATH = `${HOME_DIR}/${constants.CONFIG_FOLDER_NAME}`;
 const HOME_CONFIG_FILE_PATH = `${HOME_CONFIG_FOLDER_PATH}/${constants.CONFIG_FILE_NAME}`
 

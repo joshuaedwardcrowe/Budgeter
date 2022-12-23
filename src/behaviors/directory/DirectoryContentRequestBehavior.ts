@@ -1,41 +1,42 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import MainIcpModule from "../../modules/MainIcpModule";
+import MainIpcModule from "../../modules/MainIpcModule";
 import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
-import IpcKey from "../../models/IpcKey";
 
-function sendContentFailureResponse() {
-    const response: IDirectoryContentResponse = {
-        success: false,
-        directoryContent: []
-    }
-
-    MainIcpModule.sendFailure(IpcKey.DIRECTORY_CONTENT, response);
-}
-
-export default async function (request: IDirectoryContentRequest) {
-    const directoryExists = await StorageModule.tryCheckDirectoryExists(request.directoryPath);
+export default async function ({ source, key, directoryPath }: IDirectoryContentRequest) {
+    const directoryExists = await StorageModule.tryCheckDirectoryExists(directoryPath);
 
     if (!directoryExists) {
-        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No Directory: ${request.directoryPath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logWarning(source, "DirectoryContentRequestBehavior", `No Directory: ${directoryPath}`);
+
         return;
     }
 
     try {
-        const directoryContent = await StorageModule.readDirectoryContent(request.directoryPath);
+        const directoryContent = await StorageModule.readDirectoryContent(directoryPath);
 
-        const response: IDirectoryContentResponse = {
+        MainIpcModule.sendSuccess<IDirectoryContentResponse>({
+            source,
+            key,
             success: true,
             directoryContent
-        };
+        })
 
-        MainIcpModule.sendSuccess(IpcKey.DIRECTORY_CONTENT, response);
-        MainLoggingModule.logInfo("DirectoryContentRequestBehavior", `Resolved: ${response.directoryContent}`);
+        MainLoggingModule.logInfo(source,"DirectoryContentRequestBehavior", `Resolved: ${directoryContent}`);
     } catch (e) {
-        console.log(e);
-        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `Failed Read Directory Content: ${request.directoryPath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logWarning(source, "DirectoryContentRequestBehavior", `Failed Read Directory Content: ${directoryPath}`);
     }
 }

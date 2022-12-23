@@ -7,28 +7,33 @@ import IpcStatus from "../models/IpcStatus";
 import IpcChannel from "../models/IpcChannel";
 
 export default class RendererIpcModule {
-    protected sendIpcMessage<TRequest extends IRequest>(key: IpcKey, request?: TRequest): void {
-        const requestKey = new IpcChannel(key, IpcStatus.REQUEST);
-        RendererLoggingModule.logInfo("RendererIpcModule", `Sent: ${requestKey}`);
-        ipcRenderer.send(requestKey.stringify(), request);
+    protected sendIpcMessage<TRequest extends IRequest>(request: TRequest): void {
+        const requestChannel = new IpcChannel(request.key, IpcStatus.REQUEST);
+        const requestChannelStringified = requestChannel.stringify();
+        RendererLoggingModule.logInfo("RendererIpcModule", `Sent: ${requestChannelStringified}`);
+        ipcRenderer.send(requestChannel.stringify(), request);
     }
 
     protected async addIpcListeners<TResponse extends IResponse>(channel: IpcKey): Promise<TResponse> {
         const successChannel = new IpcChannel(channel, IpcStatus.SUCCESS);
         const failureChannel = new IpcChannel(channel, IpcStatus.FAILURE);
-        RendererLoggingModule.logInfo("RendererIpcModule", `Listening for: ${successChannel} OR ${failureChannel}`);
+        const successChannelStringified = successChannel.stringify();
+        const failureChannelStringified = failureChannel.stringify();
+        RendererLoggingModule.logInfo("RendererIpcModule", `Listening for: ${successChannelStringified} OR ${failureChannelStringified}`);
         const successListener: Promise<TResponse> = this.createIpcListener<TResponse>(successChannel);
         const failureListener: Promise<TResponse> = this.createIpcListener<TResponse>(failureChannel);
         const response: TResponse = await Promise.race<TResponse>([successListener, failureListener]);
         this.throwIpcError(channel, response);
-        RendererLoggingModule.logInfo("RendererIpcModule", `Got: ${successChannel}`);
+        RendererLoggingModule.logInfo("RendererIpcModule", `Got: ${successChannelStringified}`);
         return response;
     }
 
-    private throwIpcError(channel: IpcKey, response: IResponse) {
+    private throwIpcError(key: IpcKey, response: IResponse) {
         if (!response.success) {
-            RendererLoggingModule.logInfo("RendererIpcModule", `Got: ${channel}:${IpcStatus.FAILURE}`);
-            throw new Error(`'${channel}' Failed`);
+            const failureChannel = new IpcChannel(key, IpcStatus.FAILURE);
+            const failureChannelStringified = failureChannel.stringify();
+            RendererLoggingModule.logInfo("RendererIpcModule", `Got: ${failureChannelStringified}`);
+            throw new Error(`'${key}' Failed`);
         }
     }
 

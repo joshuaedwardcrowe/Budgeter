@@ -1,41 +1,42 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import WindowModule from "../../modules/WindowModule";
-import MainIcpModule from "../../modules/MainIcpModule";
+import MainIpcModule from "../../modules/MainIpcModule";
 import IFileCreationRequest from "../../models/file/IFileCreationRequest";
-import IResponse from "../../models/IResponse";
-import IpcKey from "../../models/IpcKey";
 
-function sendContentFailureResponse() {
-    const response: IResponse = {
-        success: false
-    }
+export default async function FileCreationRequestBehavior({ source, key, filePath, fileContent }: IFileCreationRequest) {
+    MainLoggingModule.logInfo(source, FileCreationRequestBehavior.name, `Got Request`);
 
-    MainIcpModule.sendFailure(IpcKey.FILE_CREATION, response);
-}
-
-export default async function (request: IFileCreationRequest) {
-    MainLoggingModule.logInfo("FileCreationRequestBehavior", `Got Request`);
-
-    const fileExists = await StorageModule.tryCheckFileExists(request.filePath);
+    const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
     if (fileExists) {
-        MainLoggingModule.logWarning("FileCreationRequestBehavior", `File Exists: ${request.filePath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logWarning(source, FileCreationRequestBehavior.name, `File Exists: ${filePath}`);
+
         return;
     }
 
     try {
-        await StorageModule.createFile(request.filePath, request.fileContent);
+        await StorageModule.createFile(filePath, fileContent);
 
-        const response: IResponse = {
+        MainIpcModule.sendSuccess({
+            source,
+            key,
             success: true
-        }
+        });
 
-        MainIcpModule.sendSuccess(IpcKey.FILE_CREATION, response);
-        MainLoggingModule.logInfo("FileCreationRequestBehavior", `Resolved: ${request.filePath}`);
+        MainLoggingModule.logInfo(source, FileCreationRequestBehavior.name,`Resolved: ${filePath}`);
     } catch (e) {
-        MainLoggingModule.logWarning("FileCreationRequestBehavior", `Could Not Create File: ${request.filePath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logWarning(source, FileCreationRequestBehavior.name, `Could Not Create File: ${filePath}`);
     }
 }

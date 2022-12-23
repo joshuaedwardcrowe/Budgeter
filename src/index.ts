@@ -3,7 +3,7 @@ import MainLoggingModule from "./modules/MainLoggingModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
-import FilePathRequestBehavior from "./behaviors/file/FilePathRequestBehavior";
+import FilePathRequestBehavior from "./behaviors/file/FilePathPromptRequestBehavior";
 import HomeDirectoryPathRequestBehavior from "./behaviors/directory/HomeDirectoryPathRequestBehavior";
 import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
 import FileCreationRequestBehavior from "./behaviors/file/FileCreationRequestBehavior";
@@ -32,9 +32,9 @@ app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENT
 app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
 
-// TODO: Can this be integrated into MainIcpModule
+// TODO: Can this be integrated into MainIpcModule
 ipcMain.on(constants.IPC_PROMPT_FILE_PATH_REQUEST, (_, request) => FilePathRequestBehavior(request));
-ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, () => HomeDirectoryPathRequestBehavior())
+ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, (_, request) => HomeDirectoryPathRequestBehavior(request))
 ipcMain.on(constants.IPC_FILE_CONTENT_REQUEST, (_, request) => FileContentRequestBehavior(request));
 ipcMain.on(constants.IPC_FILE_CREATION_REQUEST, (_, request) => FileCreationRequestBehavior(request));
 ipcMain.on(`${IpcKey.FILE_DELETION}:${IpcStatus.REQUEST}`, (_, request) => FileDeletionRequestBehavior(request));

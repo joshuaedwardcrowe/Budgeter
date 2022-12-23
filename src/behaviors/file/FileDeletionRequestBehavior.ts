@@ -1,22 +1,37 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import MainIcpModule from "../../modules/MainIcpModule";
+import MainIpcModule from "../../modules/MainIpcModule";
 import IFileDeletionRequest from "../../models/file/IFileDeletionRequest";
-import IpcKey from "../../models/IpcKey";
 
-export default async function (request: IFileDeletionRequest) {
-    const fileExists = await StorageModule.tryCheckFileExists(request.filePath);
+export default async function FileDeletionRequestBehavior({ source, key, filePath }: IFileDeletionRequest) {
+    const fileExists = await StorageModule.tryCheckFileExists(filePath);
     if (!fileExists) {
-        MainLoggingModule.logError("FileDeletioNRequestBehavior", `No File: ${request.filePath}`);
-        MainIcpModule.sendSuccess(IpcKey.FILE_DELETION);
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false,
+        })
+
+        MainLoggingModule.logError(source, FileDeletionRequestBehavior.name, `No File: ${filePath}`);
     }
 
     try {
-        await StorageModule.deleteFile(request.filePath);
-        MainIcpModule.sendSuccess(IpcKey.FILE_DELETION);
-        MainLoggingModule.logInfo("FileDeletionRequestBehavior", `Deleted File: ${request.filePath}`);
+        await StorageModule.deleteFile(filePath);
+
+        MainIpcModule.sendSuccess({
+            source,
+            key,
+            success: true
+        });
+
+        MainLoggingModule.logInfo(source, FileDeletionRequestBehavior.name, `Deleted File: ${filePath}`);
     } catch (e) {
-        MainIcpModule.sendFailure(IpcKey.FILE_DELETION);
-        MainLoggingModule.logError("FileDeletionRequestBehavior", `Failed to Delete File: ${request.filePath}`);
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        });
+
+        MainLoggingModule.logError(source, FileDeletionRequestBehavior.name, `Failed to Delete File: ${filePath}`);
     }
 }

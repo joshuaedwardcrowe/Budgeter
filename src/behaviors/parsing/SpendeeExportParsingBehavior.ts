@@ -3,8 +3,7 @@ import ISpendeeExportParsingRequest from "../../models/parsing/ISpendeeExportPar
 import StorageModule from "../../modules/StorageModule";
 import ITransaction from "../../models/transaction/ITransaction";
 import TransactionMapper from "../../mappers/TransactionMapper";
-import MainIcpModule from "../../modules/MainIcpModule";
-import IpcKey from "../../models/IpcKey";
+import MainIpcModule from "../../modules/MainIpcModule";
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import ISpendeeExportParsingResponse from "../../models/parsing/ISpendeeExportParsingResponse";
 
@@ -12,41 +11,53 @@ const CSV_PARSING_ERROR = "error";
 const CSV_PARSING_DATA = "data";
 const CSV_PARSING_END = "end";
 
-export default async function (request: ISpendeeExportParsingRequest) {
-    const fileExists = await StorageModule.tryCheckFileExists(request.exportFilePath);
+export default async function SpendeeExportParsingBehavior({ source, key, exportFilePath }: ISpendeeExportParsingRequest) {
+    const fileExists = await StorageModule.tryCheckFileExists(exportFilePath);
     if (!fileExists) {
-        MainLoggingModule.logError("SpendeeExportParsingBehavior", `No File: ${request.exportFilePath}`);
-        MainIcpModule.sendFailure(IpcKey.SPENDEE_EXPORT_PARSING);
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logError(source, SpendeeExportParsingBehavior.name, `No File: ${exportFilePath}`);
     }
 
-    const content = await StorageModule.readFile(request.exportFilePath);
-    MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `Got File: ${request.exportFilePath}`);
+    const content = await StorageModule.readFile(exportFilePath);
+    MainLoggingModule.logInfo(source, SpendeeExportParsingBehavior.name, `Got File: ${exportFilePath}`);
 
     const parser = parseString(content);
     const transactions: ITransaction[] = [];
 
     parser.on(CSV_PARSING_ERROR, error => {
-        MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Failed: ${error}`);
-        MainIcpModule.sendFailure(IpcKey.SPENDEE_EXPORT_PARSING);
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logInfo(source, SpendeeExportParsingBehavior.name, `CSV Parsing Failed: ${error}`);
     });
 
     parser.on(CSV_PARSING_DATA, row => {
-        MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Got Data: ${row}`);
+        const transactionCount: number = transactions.length + 1;
+        MainLoggingModule.logInfo(source, SpendeeExportParsingBehavior.name, `CSV Parsing Got Data ${transactionCount}`);
         const transaction = TransactionMapper.fromCSVRow(row);
         transactions.push(transaction);
     });
 
     parser.on(CSV_PARSING_END, (rowCount: number) => {
-        MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Completed: ${rowCount} Rows`);
+        MainLoggingModule.logInfo(source, SpendeeExportParsingBehavior.name, `CSV Parsing Completed: ${rowCount} Rows`);
 
         transactions.shift();
-        MainLoggingModule.logInfo("SpendeeExportParsingBehavior", `CSV Parsing Removing Header Row`);
 
-        const response: ISpendeeExportParsingResponse = {
+        MainIpcModule.sendSuccess<ISpendeeExportParsingResponse>({
+            source,
+            key,
             success: true,
             transactions
-        };
+        })
 
-        MainIcpModule.sendSuccess(IpcKey.SPENDEE_EXPORT_PARSING, response);
+        MainLoggingModule.logInfo(source, SpendeeExportParsingBehavior.name, `CSV Parsing Removing Header Row [${source}]`);
     })
 }

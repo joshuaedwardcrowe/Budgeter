@@ -7,7 +7,8 @@ import ITransaction from "./models/transaction/ITransaction";
 import BudgetCategoryMapper from "./mappers/BudgetCategoryMapper";
 import Budget from "./models/budget/Budget";
 import BudgetHistory from "./models/budget/BudgetHistory";
-import TransactionType from "./models/transaction/TransactionType";
+import * as constants from "./constants";
+import IpcSource from "./models/IpcSource";
 
 // TODO: Step 2 is to store the Budget model generated from CSV in a JSON file.
 
@@ -25,9 +26,9 @@ createApp({
         },
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
-            const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
+            const spendeeExportPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}.csv`;
 
-            modules.parsing.askForSpendeeExportParsing(spendeeExportPath);
+            modules.parsing.askForSpendeeExportParsing(IpcSource.Index, spendeeExportPath);
             const transactions: ITransaction[] = await modules.parsing.resolveSpendeeExportParsing();
 
             const categories = BudgetCategoryMapper.fromTransactions(transactions);
@@ -37,20 +38,21 @@ createApp({
         },
         async deleteSpendeeExport(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
-            const spendeeExportPath = `${homeDirectoryPath}/${info.fileName}.csv`;
+            const spendeeExportPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}.csv`;
 
-            modules.file.askForFileDeletion(spendeeExportPath);
+            modules.file.askForFileDeletion(IpcSource.Index, spendeeExportPath);
             await modules.file.waitForFileDeletion();
 
             this.spendeeExports = this.spendeeExports.filter(se => !se.fileName == info.fileName);
         },
         async getExistingSpendeeExports() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const budgeterDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
-            modules.directory.askForDirectoryContent(homeDirectoryPath);
+            modules.directory.askForDirectoryContent(IpcSource.Index, budgeterDirectoryPath);
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Asking For Directory Content: ${homeDirectoryPath}`);
 
-            const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent();
+            const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent(IpcSource.Index);
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryContent}`);
 
             const isExport = (filePath: string): filePath is string => SpendeeParserModule.checkFileIsExport(filePath);
@@ -65,7 +67,10 @@ createApp({
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Set ${this.spendeeExports.length} Exports`);
         },
         async askForSpendeeExport() {
-            modules.file.askToPromptForFilePath("Spendee Export");
+            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const downloadsPath = `${homeDirectoryPath}/${constants.ENVIRONMENT_DOWNLOADS_FOLDER}`;
+
+            modules.file.askToPromptForFilePath(IpcSource.Index, downloadsPath, "Spendee Export");
             RendererLoggingModule.logInfo("askForSpendeeExport", "Asking For File Path to Spendee Export");
 
             const filePath = await modules.file.resolvePromptedForFilePath();
@@ -73,18 +78,18 @@ createApp({
 
             const exportInfo = SpendeeParserModule.parseExportInfoFromFilePath(filePath);
 
-            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const configPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
             // TODO: There must be a way to not put CSV in here and in Export Info FileName instead.
-            const exportSaveDirectoryPath = `${homeDirectoryPath}/${exportInfo.fileName}.csv`;
+            const exportSaveDirectoryPath = `${configPath}/${exportInfo.fileName}.csv`;
 
-            modules.file.askForFileContent(filePath);
+            modules.file.askForFileContent(IpcSource.Index, filePath);
             RendererLoggingModule.logInfo("askForSpendeeExport", `Asked for File Content: ${filePath}`);
 
             const fileContent = await modules.file.resolveFileContent();
             RendererLoggingModule.logInfo("askForSpendeeExport", `Got File Content: ${filePath}`);
 
-            modules.file.askForFileCreation(exportSaveDirectoryPath, fileContent);
+            modules.file.askForFileCreation(IpcSource.Index, exportSaveDirectoryPath, fileContent);
             RendererLoggingModule.logInfo("askForSpendeeExport", `Ask For File Creation: ${exportSaveDirectoryPath}`);
 
             await modules.file.waitForFileCreation();
@@ -94,7 +99,7 @@ createApp({
         },
         async getHomeDirectoryPath() {
             if (!this.homeDirectoryPath) {
-                modules.directory.askForHomeDirectoryPath();
+                modules.directory.askForHomeDirectoryPath(IpcSource.Index);
                 RendererLoggingModule.logInfo("getHomeDirectoryPath", "Asked for Home Directory Path");
 
                 const homeDirectoryPath = await modules.directory.resolveHomeDirectoryPath();

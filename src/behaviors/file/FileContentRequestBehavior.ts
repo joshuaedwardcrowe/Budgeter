@@ -1,39 +1,42 @@
 import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
-import MainIcpModule from "../../modules/MainIcpModule";
+import MainIpcModule from "../../modules/MainIpcModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
-import IpcKey from "../../models/IpcKey";
 
-function sendContentFailureResponse() {
-    const response: IFileContentResponse = {
-        success: false,
-        fileContent: null
-    }
-
-    MainIcpModule.sendFailure(IpcKey.FILE_CONTENT, response)
-}
-
-export default async function (request: IFileContentRequest) {
-    const fileExists = await StorageModule.tryCheckFileExists(request.filePath);
+export default async function FileContentRequestBehavior({ source, key, filePath }: IFileContentRequest) {
+    const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
     if (!fileExists) {
-        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File: ${request.filePath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        // TODO: A nicer way to build the logger for this behavior?
+        MainLoggingModule.logWarning(source, FileContentRequestBehavior.name, `No File: ${filePath}`);
         return;
     }
 
     try {
-        const fileContent = await StorageModule.readFile(request.filePath);
+        const fileContent = await StorageModule.readFile(filePath);
 
-        const message: IFileContentResponse = {
+        MainIpcModule.sendSuccess<IFileContentResponse>({
+            source,
+            key,
             success: true,
             fileContent
-        };
+        })
 
-        MainIcpModule.sendSuccess(IpcKey.FILE_CONTENT, message);
+        MainLoggingModule.logInfo(source, FileContentRequestBehavior.name, `File Found: ${filePath}`);
     } catch (e) {
-        MainLoggingModule.logWarning("DirectoryContentRequestBehavior", `No File Content: ${request.filePath}`);
-        sendContentFailureResponse();
+        MainIpcModule.sendFailure({
+            source,
+            key,
+            success: false
+        })
+
+        MainLoggingModule.logWarning(source, FileContentRequestBehavior.name, `No File Content: ${filePath} [${source}]`);
     }
 }

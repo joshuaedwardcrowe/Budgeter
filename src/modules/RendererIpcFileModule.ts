@@ -6,6 +6,7 @@ import IFileContentResponse from "../models/file/IFileContentResponse";
 import IFileCreationRequest from "../models/file/IFileCreationRequest";
 import IResponse from "../models/IResponse";
 import IpcKey from "../models/IpcKey";
+import IpcSource from "../models/IpcSource";
 import IFileDeletionRequest from "../models/file/IFileDeletionRequest";
 
 class RendererIpcFileModule extends RendererIpcModule {
@@ -14,13 +15,13 @@ class RendererIpcFileModule extends RendererIpcModule {
         return response.filePath;
     }
 
-    public askToPromptForFilePath(reasonForFilePath: string): void {
-        const request: IFilePathPromptRequest = {
+    public askToPromptForFilePath(source: IpcSource, directoryPath: string, reasonForFilePath: string): void {
+        this.sendIpcMessage<IFilePathPromptRequest>({
+            source,
             key: IpcKey.PROMPT_FILE_PATH,
+            directoryPath,
             reasonForFilePath
-        }
-
-        this.sendIpcMessage(request.key, request);
+        });
     }
 
     public async resolveFileContent(): Promise<string> {
@@ -28,40 +29,37 @@ class RendererIpcFileModule extends RendererIpcModule {
         return response.fileContent;
     }
 
-    public askForFileContent(filePath: string) {
-        const request: IFileContentRequest = {
+    public askForFileContent(source: IpcSource, filePath: string) {
+        this.sendIpcMessage<IFileContentRequest>({
+            source,
             key: IpcKey.FILE_CONTENT,
             filePath
-        };
-
-        this.sendIpcMessage(request.key, request);
+        });
     }
 
     public async waitForFileCreation(): Promise<void> {
         await this.addIpcListeners<IResponse>(IpcKey.FILE_CREATION);
     }
 
-    public askForFileCreation(filePath: string, fileContent: string) {
-        const request: IFileCreationRequest = {
+    public askForFileCreation(source: IpcSource, filePath: string, fileContent: string) {
+        this.sendIpcMessage<IFileCreationRequest>({
+            source,
             key: IpcKey.FILE_CREATION,
             filePath,
             fileContent
-        }
-
-        this.sendIpcMessage(request.key, request);
+        })
     }
 
     public async waitForFileDeletion(): Promise<void> {
         await this.addIpcListeners<IResponse>(IpcKey.FILE_DELETION);
     }
 
-    public askForFileDeletion(filePath: string) {
-        const request: IFileDeletionRequest = {
+    public askForFileDeletion(source: IpcSource, filePath: string) {
+        this.sendIpcMessage<IFileDeletionRequest>({
+            source,
             key: IpcKey.FILE_DELETION,
             filePath
-        };
-
-        this.sendIpcMessage(request.key, request);
+        });
     }
 }
 
