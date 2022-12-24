@@ -10,6 +10,7 @@ export const CONFIG_FILE_NAME = "budgeter-config.json";
 export const LOG_FILE_NAME = "budgeter.log";
 
 export const DEFAULT_WINDOW_TITLE = "Budgeter";
+export const DEFAULT_WINDOW_SHOW = false;
 export const DEFAULT_WINDOW_HEIGHT = 800;
 export const DEFAULT_WINDOW_WIDTH = 1200;
 export const DEFAULT_WINDOW_NODE_INTEGRATION = false;

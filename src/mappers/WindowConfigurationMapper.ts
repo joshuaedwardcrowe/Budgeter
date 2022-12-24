@@ -5,6 +5,7 @@ export default class WindowConfigurationMapper {
     static fromBudgeterConfiguration(config: IBudgeterConfiguration): IWindowConfiguration {
         return {
             title: config.windowTitle,
+            show: config.windowShow,
             height: config.windowHeight,
             width: config.windowWidth
         }

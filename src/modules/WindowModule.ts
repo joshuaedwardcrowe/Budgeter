@@ -2,6 +2,7 @@ import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 
 import IWindowConfiguration from "../models/window/IWindowConfiguration";
 import IpcSource from "../models/IpcSource";
 import IResponse from "../models/IResponse";
+import MainLoggingModule from "./logging/MainLoggingModule";
 
 class WindowModule {
     windows: Map<IpcSource, BrowserWindow>;
