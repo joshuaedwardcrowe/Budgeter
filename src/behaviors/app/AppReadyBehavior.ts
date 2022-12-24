@@ -14,8 +14,12 @@ export default async function AppReadyBehavior(load: string, preload: string) {
 
         const windowWebConfiguration = WindowWebConfigurationMapper.fromBudgeterConfiguration(budgeterConfiguration);
         windowWebConfiguration.preload = preload;
+        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Web Configuration`);
 
-        const windowConfiguration = WindowConfigurationMapper.fromBudgeterConfiguration(budgeterConfiguration, windowWebConfiguration);
+        const windowConfiguration = WindowConfigurationMapper.fromBudgeterConfiguration(budgeterConfiguration);
+        windowConfiguration.source = IpcSource.Index;
+        windowConfiguration.webPreferences = windowWebConfiguration;
+        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Configuration`);
 
         const window = await WindowModule.createWindow(windowConfiguration);
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window: ${window.title}`);
@@ -26,6 +30,7 @@ export default async function AppReadyBehavior(load: string, preload: string) {
         window.webContents.openDevTools();
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, "Opened Window Developer Tools");
     } catch (e) {
+        console.log(e);
         MainLoggingModule.logError(IpcSource.Main, AppReadyBehavior.name, "Failed to Create Window");
         WindowModule.showErrorDialog(constants.FAILED_CONFIG_ERROR_TITLE, constants.FAILED_CONFIG_ERROR_MESSAGE)
     }

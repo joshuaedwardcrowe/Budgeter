@@ -21,15 +21,15 @@ export default class MainIpcModule {
         });
     }
     static sendSuccess<TResponse extends IResponse>(response: TResponse): void {
-        const channel = new IpcChannel(response.key, IpcStatus.SUCCESS);
-        const stringified = channel.stringify();
-        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${stringified}`);
-        WindowModule.window.webContents.send(stringified, response);
+        const successChannel = new IpcChannel(response.key, IpcStatus.SUCCESS);
+        const successChannelStringified = successChannel.stringify();
+        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${successChannelStringified}`);
+        WindowModule.sendMessage(response.source, successChannelStringified, response);
     }
     static sendFailure(response: IResponse): void {
-        const channel = new IpcChannel(response.key, IpcStatus.FAILURE);
-        const stringified = channel.stringify();
-        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${stringified}`);
-        WindowModule.window.webContents.send(stringified, response);
+        const failureChannel = new IpcChannel(response.key, IpcStatus.FAILURE);
+        const failureChannelStringified = failureChannel.stringify();
+        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${failureChannelStringified}`);
+        WindowModule.sendMessage(response.source, failureChannelStringified, response);
     }
 }

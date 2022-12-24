@@ -1,5 +1,5 @@
 export default interface IWindowWebConfiguration {
-    preload: string,
+    preload?: string,
     nodeIntegration: boolean,
     contextIsolation: boolean
 }

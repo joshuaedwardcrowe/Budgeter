@@ -1,8 +1,14 @@
 import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import IWindowConfiguration from "../models/window/IWindowConfiguration";
+import IpcSource from "../models/IpcSource";
+import IResponse from "../models/IResponse";
 
 class WindowModule {
-    window: BrowserWindow;
+    windows: Map<IpcSource, BrowserWindow>;
+
+    constructor() {
+        this.windows = new Map<IpcSource, BrowserWindow>();
+    }
 
     getWindows(): BrowserWindow[] {
         return BrowserWindow.getAllWindows();
@@ -13,16 +19,23 @@ class WindowModule {
     }
 
     async createWindow(config: IWindowConfiguration) {
-        this.window = new BrowserWindow(config);
-        return this.window;
+        const window = new BrowserWindow(config);
+        this.windows.set(config.source, window);
+        return window;
     }
 
     showErrorDialog(title: string, content: string): void {
         dialog.showErrorBox(title, content);
     }
 
-    showOpenFileDialog(configuration: OpenDialogOptions): Promise<OpenDialogReturnValue> {
-        return dialog.showOpenDialog(this.window, configuration);
+    showOpenFileDialog(source: IpcSource, configuration: OpenDialogOptions): Promise<OpenDialogReturnValue> {
+        const window = this.windows.get(source);
+        return dialog.showOpenDialog(window, configuration);
+    }
+
+    sendMessage(source: IpcSource, channel: string, response: IResponse) {
+        const window = this.windows.get(source);
+        window.webContents.send(channel, response);
     }
 }
 
