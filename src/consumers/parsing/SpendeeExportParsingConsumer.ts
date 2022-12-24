@@ -5,13 +5,13 @@ import ITransaction from "../../models/transaction/ITransaction";
 import TransactionMapper from "../../mappers/TransactionMapper";
 import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import ISpendeeExportParsingResponse from "../../models/parsing/ISpendeeExportParsingResponse";
-import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
+import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
 const CSV_PARSING_ERROR = "error";
 const CSV_PARSING_DATA = "data";
 const CSV_PARSING_END = "end";
 
-export default async function SpendeeExportParsingConsumer(logger: IMainBehaviorLoggingModule, { source, key, exportFilePath }: ISpendeeExportParsingRequest) {
+export default async function SpendeeExportParsingConsumer(logger: MainConsumerLoggingModule, { source, key, exportFilePath }: ISpendeeExportParsingRequest) {
     const fileExists = await StorageModule.tryCheckFileExists(exportFilePath);
     if (!fileExists) {
         MainIpcModule.sendFailure({

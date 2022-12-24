@@ -4,9 +4,9 @@ import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
-import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
+import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
-export default async function FilePathRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, directoryPath, reasonForFilePath }: IFilePathPromptRequest) {
+export default async function FilePathRequestConsumer(logger: MainConsumerLoggingModule, { source, key, directoryPath, reasonForFilePath }: IFilePathPromptRequest) {
     logger.logInfo(`Got Request for ${reasonForFilePath} in ${directoryPath}`);
 
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(constants.TEMPLATE_REASON_FOR_FILE, reasonForFilePath);

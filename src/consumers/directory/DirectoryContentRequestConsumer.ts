@@ -2,9 +2,9 @@ import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
 import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
-import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
+import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
-export default async function DirectoryContentRequestConsumer(logging: IMainBehaviorLoggingModule, { source, key, directoryPath }: IDirectoryContentRequest) {
+export default async function DirectoryContentRequestConsumer(logging: MainConsumerLoggingModule, { source, key, directoryPath }: IDirectoryContentRequest) {
     const directoryExists = await StorageModule.tryCheckDirectoryExists(directoryPath);
 
     if (!directoryExists) {

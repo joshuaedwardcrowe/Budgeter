@@ -7,16 +7,15 @@ import IpcStatus from "../../models/IpcStatus";
 import IpcSource from "../../models/IpcSource";
 import IRequest from "../../models/IRequest";
 import IpcKey from "../../models/IpcKey";
-import IMainBehaviorLoggingModule from "../logging/IMainBehaviorLoggingModule";
-import MainBehaviorLoggingModule from "../logging/MainBehaviorLoggingModule";
+import MainConsumerLoggingModule from "../logging/MainConsumerLoggingModule";
 
 export default class MainIpcModule {
-    static on<TRequest extends IRequest>(key: IpcKey, handler: (logging: IMainBehaviorLoggingModule, request: TRequest) => Promise<void>): void {
+    static on<TRequest extends IRequest>(key: IpcKey, handler: (logging: MainConsumerLoggingModule, request: TRequest) => Promise<void>): void {
         const requestChannel = new IpcChannel(key, IpcStatus.REQUEST);
         const requestChannelStringified: string = requestChannel.stringify();
 
         ipcMain.on(requestChannelStringified, (_, r: TRequest) => {
-            const logging = new MainBehaviorLoggingModule(r.source, r.key, handler.name);
+            const logging = new MainConsumerLoggingModule(r.source, r.key, handler.name);
             return handler(logging, r);
         });
     }

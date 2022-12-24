@@ -13,7 +13,6 @@ import DirectoryContentRequestConsumer from "./consumers/directory/DirectoryCont
 import SpendeeExportParsingConsumer from "./consumers/parsing/SpendeeExportParsingConsumer";
 import * as constants from "./constants";
 import IpcKey from "./models/IpcKey";
-import IpcStatus from "./models/IpcStatus";
 import IpcSource from "./models/IpcSource";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

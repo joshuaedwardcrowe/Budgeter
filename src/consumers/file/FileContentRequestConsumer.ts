@@ -2,9 +2,9 @@ import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
-import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
+import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
-export default async function FileContentRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, filePath }: IFileContentRequest) {
+export default async function FileContentRequestConsumer(logger: MainConsumerLoggingModule, { source, key, filePath }: IFileContentRequest) {
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
     if (!fileExists) {
