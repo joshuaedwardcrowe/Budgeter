@@ -1,5 +1,6 @@
-import { app, ipcMain } from 'electron';
+import {app, ipcMain} from 'electron';
 import MainLoggingModule from "./modules/MainLoggingModule";
+import MainIpcModule from "./modules/MainIpcModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
@@ -13,6 +14,7 @@ import SpendeeExportParsingBehavior from "./behaviors/parsing/SpendeeExportParsi
 import * as constants from "./constants";
 import IpcKey from "./models/IpcKey";
 import IpcStatus from "./models/IpcStatus";
+import IpcSource from "./models/IpcSource";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -25,20 +27,19 @@ if (require('electron-squirrel-startup')) {
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-MainLoggingModule.logInfo("Index", `Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
-MainLoggingModule.logInfo("Index", `Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
+MainLoggingModule.logInfo(IpcSource.Main,"Index",`Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
+MainLoggingModule.logInfo(IpcSource.Main, "Index",`Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
 
 app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY));
 app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
 
-// TODO: Can this be integrated into MainIpcModule
-ipcMain.on(constants.IPC_PROMPT_FILE_PATH_REQUEST, (_, request) => FilePathRequestBehavior(request));
-ipcMain.on(constants.IPC_HOME_DIRECTORY_PATH_REQUEST, (_, request) => HomeDirectoryPathRequestBehavior(request))
-ipcMain.on(constants.IPC_FILE_CONTENT_REQUEST, (_, request) => FileContentRequestBehavior(request));
-ipcMain.on(constants.IPC_FILE_CREATION_REQUEST, (_, request) => FileCreationRequestBehavior(request));
-ipcMain.on(`${IpcKey.FILE_DELETION}:${IpcStatus.REQUEST}`, (_, request) => FileDeletionRequestBehavior(request));
-ipcMain.on(constants.IPC_DIRECTORY_CONTENT_REQUEST, (_, request) => DirectoryContentRequestBehavior(request));
-ipcMain.on(`${IpcKey.SPENDEE_EXPORT_PARSING}:${IpcStatus.REQUEST}`, (_, request) => SpendeeExportParsingBehavior(request));
+MainIpcModule.on(IpcKey.PROMPT_FILE_PATH, FilePathRequestBehavior);
+MainIpcModule.on(IpcKey.HOME_DIRECTORY_PATH, HomeDirectoryPathRequestBehavior);
+MainIpcModule.on(IpcKey.FILE_CONTENT, FileContentRequestBehavior);
+MainIpcModule.on(IpcKey.FILE_CREATION, FileCreationRequestBehavior);
+MainIpcModule.on(IpcKey.FILE_DELETION, FileDeletionRequestBehavior);
+MainIpcModule.on(IpcKey.DIRECTORY_CONTENT, DirectoryContentRequestBehavior);
+MainIpcModule.on(IpcKey.SPENDEE_EXPORT_PARSING, SpendeeExportParsingBehavior);
 
-MainLoggingModule.logInfo("Index", "IPC Listeners Attached");
+MainLoggingModule.logInfo(IpcSource.Main, "Index", "IPC Listeners Attached");

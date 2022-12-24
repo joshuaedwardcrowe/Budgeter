@@ -36,8 +36,7 @@ export default class RendererIpcModule {
             throw new Error(`'${key}' Failed`);
         }
     }
-
-    // TODO: Is there some way to constrain the channel key?
+    
     private createIpcListener<TResponse extends IResponse>(channel: IpcChannel): Promise<TResponse> {
         const stringified: string = channel.stringify();
 

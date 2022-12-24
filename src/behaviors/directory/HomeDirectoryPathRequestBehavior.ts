@@ -4,7 +4,7 @@ import MainIpcModule from "../../modules/MainIpcModule";
 import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
 import IRequest from "../../models/IRequest";
 
-export default function ({ source, key }: IRequest) {
+export default async function HomeDirectoryPathRequestBehavior({ source, key }: IRequest) {
     const homeDirectoryPath = StorageModule.getHomeDirectoryPath();
 
     MainIpcModule.sendSuccess<IHomeDirectoryPathResponse>({
@@ -14,5 +14,5 @@ export default function ({ source, key }: IRequest) {
         homeDirectoryPath
     });
 
-    MainLoggingModule.logInfo(source, "HomeDirectoryPathRequestBehavior", `Resolved: ${homeDirectoryPath}`);
+    MainLoggingModule.logInfo(source, HomeDirectoryPathRequestBehavior.name, `Resolved: ${homeDirectoryPath}`);
 }
