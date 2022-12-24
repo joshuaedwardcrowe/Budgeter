@@ -1,5 +1,5 @@
 import WindowModule from "../../modules/WindowModule";
-import MainLoggingModule from "../../modules/MainLoggingModule";
+import MainLoggingModule from "../../modules/logging/MainLoggingModule";
 import AppReadyBehavior from "./AppReadyBehavior";
 import IpcSource from "../../models/IpcSource";
 

@@ -1,5 +1,5 @@
 import {createLogger, format, Logger, LoggerOptions, transports} from "winston";
-import LoggingLevel from "../models/LoggingLevel";
+import LoggingLevel from "../../models/LoggingLevel";
 
 class MainLoggingModule {
     private logger: Logger;

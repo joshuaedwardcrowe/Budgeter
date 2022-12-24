@@ -1,10 +1,10 @@
-import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/MainIpcModule";
 import IFileCreationRequest from "../../models/file/IFileCreationRequest";
+import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 
-export default async function FileCreationRequestBehavior({ source, key, filePath, fileContent }: IFileCreationRequest) {
-    MainLoggingModule.logInfo(source, FileCreationRequestBehavior.name, `Got Request`);
+export default async function FileCreationRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, filePath, fileContent }: IFileCreationRequest) {
+    logger.logInfo(`Got Request`);
 
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
@@ -15,7 +15,7 @@ export default async function FileCreationRequestBehavior({ source, key, filePat
             success: false
         })
 
-        MainLoggingModule.logWarning(source, FileCreationRequestBehavior.name, `File Exists: ${filePath}`);
+        logger.logWarning(`File Exists: ${filePath}`);
 
         return;
     }
@@ -29,7 +29,7 @@ export default async function FileCreationRequestBehavior({ source, key, filePat
             success: true
         });
 
-        MainLoggingModule.logInfo(source, FileCreationRequestBehavior.name,`Resolved: ${filePath}`);
+        logger.logInfo(`Resolved: ${filePath}`);
     } catch (e) {
         MainIpcModule.sendFailure({
             source,
@@ -37,6 +37,6 @@ export default async function FileCreationRequestBehavior({ source, key, filePat
             success: false
         })
 
-        MainLoggingModule.logWarning(source, FileCreationRequestBehavior.name, `Could Not Create File: ${filePath}`);
+        logger.logWarning(`Could Not Create File: ${filePath}`);
     }
 }

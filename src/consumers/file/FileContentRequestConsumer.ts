@@ -1,10 +1,10 @@
-import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/MainIpcModule";
 import IFileContentRequest from "../../models/file/IFIleContentRequest";
 import IFileContentResponse from "../../models/file/IFileContentResponse";
+import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 
-export default async function FileContentRequestBehavior({ source, key, filePath }: IFileContentRequest) {
+export default async function FileContentRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, filePath }: IFileContentRequest) {
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
     if (!fileExists) {
@@ -15,7 +15,7 @@ export default async function FileContentRequestBehavior({ source, key, filePath
         })
 
         // TODO: A nicer way to build the logger for this behavior?
-        MainLoggingModule.logWarning(source, FileContentRequestBehavior.name, `No File: ${filePath}`);
+        logger.logWarning(`No File: ${filePath}`);
         return;
     }
 
@@ -29,7 +29,7 @@ export default async function FileContentRequestBehavior({ source, key, filePath
             fileContent
         })
 
-        MainLoggingModule.logInfo(source, FileContentRequestBehavior.name, `File Found: ${filePath}`);
+        logger.logInfo(`File Found: ${filePath}`);
     } catch (e) {
         MainIpcModule.sendFailure({
             source,
@@ -37,6 +37,6 @@ export default async function FileContentRequestBehavior({ source, key, filePath
             success: false
         })
 
-        MainLoggingModule.logWarning(source, FileContentRequestBehavior.name, `No File Content: ${filePath} [${source}]`);
+        logger.logWarning(`No File Content: ${filePath} [${source}]`);
     }
 }

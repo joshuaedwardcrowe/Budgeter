@@ -1,9 +1,9 @@
-import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/MainIpcModule";
 import IFileDeletionRequest from "../../models/file/IFileDeletionRequest";
+import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 
-export default async function FileDeletionRequestBehavior({ source, key, filePath }: IFileDeletionRequest) {
+export default async function FileDeletionRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, filePath }: IFileDeletionRequest) {
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
     if (!fileExists) {
         MainIpcModule.sendFailure({
@@ -12,7 +12,7 @@ export default async function FileDeletionRequestBehavior({ source, key, filePat
             success: false,
         })
 
-        MainLoggingModule.logError(source, FileDeletionRequestBehavior.name, `No File: ${filePath}`);
+        logger.logError(`No File: ${filePath}`);
     }
 
     try {
@@ -24,7 +24,7 @@ export default async function FileDeletionRequestBehavior({ source, key, filePat
             success: true
         });
 
-        MainLoggingModule.logInfo(source, FileDeletionRequestBehavior.name, `Deleted File: ${filePath}`);
+        logger.logInfo(`Deleted File: ${filePath}`);
     } catch (e) {
         MainIpcModule.sendFailure({
             source,
@@ -32,6 +32,6 @@ export default async function FileDeletionRequestBehavior({ source, key, filePat
             success: false
         });
 
-        MainLoggingModule.logError(source, FileDeletionRequestBehavior.name, `Failed to Delete File: ${filePath}`);
+        logger.logError(`Failed to Delete File: ${filePath}`);
     }
 }

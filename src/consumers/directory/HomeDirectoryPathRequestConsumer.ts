@@ -1,10 +1,10 @@
-import MainLoggingModule from "../../modules/MainLoggingModule";
 import StorageModule from "../../modules/StorageModule";
 import MainIpcModule from "../../modules/MainIpcModule";
 import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
 import IRequest from "../../models/IRequest";
+import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 
-export default async function HomeDirectoryPathRequestBehavior({ source, key }: IRequest) {
+export default async function HomeDirectoryPathRequestConsumer(logging: IMainBehaviorLoggingModule, { source, key }: IRequest) {
     const homeDirectoryPath = StorageModule.getHomeDirectoryPath();
 
     MainIpcModule.sendSuccess<IHomeDirectoryPathResponse>({
@@ -14,5 +14,5 @@ export default async function HomeDirectoryPathRequestBehavior({ source, key }: 
         homeDirectoryPath
     });
 
-    MainLoggingModule.logInfo(source, HomeDirectoryPathRequestBehavior.name, `Resolved: ${homeDirectoryPath}`);
+    logging.logInfo(`Resolved: ${homeDirectoryPath}`);
 }

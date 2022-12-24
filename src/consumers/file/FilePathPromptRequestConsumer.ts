@@ -1,13 +1,13 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
-import MainLoggingModule from "../../modules/MainLoggingModule";
 import WindowModule from "../../modules/WindowModule";
 import MainIpcModule from "../../modules/MainIpcModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
+import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 
-export default async function FilePathRequestBehavior({ source, key, directoryPath, reasonForFilePath }: IFilePathPromptRequest) {
-    MainLoggingModule.logInfo(source, FilePathRequestBehavior.name, `Got Request for ${reasonForFilePath} in ${directoryPath}`);
+export default async function FilePathRequestConsumer(logger: IMainBehaviorLoggingModule, { source, key, directoryPath, reasonForFilePath }: IFilePathPromptRequest) {
+    logger.logInfo(`Got Request for ${reasonForFilePath} in ${directoryPath}`);
 
     const reasonForFile = constants.TEXT_SELECT_FILE.replace(constants.TEMPLATE_REASON_FOR_FILE, reasonForFilePath);
 
@@ -19,7 +19,7 @@ export default async function FilePathRequestBehavior({ source, key, directoryPa
         properties: ["openFile"]
     }
 
-    MainLoggingModule.logInfo(source, FilePathRequestBehavior.name, `Opening File Dialog in ${openFileOptions.defaultPath}`);
+    logger.logInfo(`Opening File Dialog in ${openFileOptions.defaultPath}`);
     const result: OpenDialogReturnValue = await WindowModule.showOpenFileDialog(openFileOptions);
 
     if (result.canceled) {
@@ -29,7 +29,7 @@ export default async function FilePathRequestBehavior({ source, key, directoryPa
             success: true,
         })
 
-        MainLoggingModule.logWarning(source, FilePathRequestBehavior.name, `File Dialog Closed`);
+        logger.logWarning(`File Dialog Closed`);
 
         return;
     }

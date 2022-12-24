@@ -1,5 +1,5 @@
 import WindowModule from "../../modules/WindowModule";
-import MainLoggingModule from "../../modules/MainLoggingModule";
+import MainLoggingModule from "../../modules/logging/MainLoggingModule";
 import ConfigurationModule from "../../modules/ConfigurationModule";
 import IBudgeterConfiguration from "../../models/IBudgeterConfiguration";
 import WindowConfigurationMapper from "../../mappers/WindowConfigurationMapper";

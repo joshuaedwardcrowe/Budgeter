@@ -1,16 +1,16 @@
 import {app, ipcMain} from 'electron';
-import MainLoggingModule from "./modules/MainLoggingModule";
+import MainLoggingModule from "./modules/logging/MainLoggingModule";
 import MainIpcModule from "./modules/MainIpcModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
-import FilePathRequestBehavior from "./behaviors/file/FilePathPromptRequestBehavior";
-import HomeDirectoryPathRequestBehavior from "./behaviors/directory/HomeDirectoryPathRequestBehavior";
-import FileContentRequestBehavior from "./behaviors/file/FileContentRequestBehavior";
-import FileCreationRequestBehavior from "./behaviors/file/FileCreationRequestBehavior";
-import FileDeletionRequestBehavior from "./behaviors/file/FileDeletionRequestBehavior";
-import DirectoryContentRequestBehavior from "./behaviors/directory/DirectoryContentRequestBehavior";
-import SpendeeExportParsingBehavior from "./behaviors/parsing/SpendeeExportParsingBehavior";
+import FilePathRequestConsumer from "./consumers/file/FilePathPromptRequestConsumer";
+import HomeDirectoryPathRequestConsumer from "./consumers/directory/HomeDirectoryPathRequestConsumer";
+import FileContentRequestConsumer from "./consumers/file/FileContentRequestConsumer";
+import FileCreationRequestConsumer from "./consumers/file/FileCreationRequestConsumer";
+import FileDeletionRequestConsumer from "./consumers/file/FileDeletionRequestConsumer";
+import DirectoryContentRequestConsumer from "./consumers/directory/DirectoryContentRequestConsumer";
+import SpendeeExportParsingConsumer from "./consumers/parsing/SpendeeExportParsingConsumer";
 import * as constants from "./constants";
 import IpcKey from "./models/IpcKey";
 import IpcStatus from "./models/IpcStatus";
@@ -34,12 +34,12 @@ app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENT
 app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
 
-MainIpcModule.on(IpcKey.PROMPT_FILE_PATH, FilePathRequestBehavior);
-MainIpcModule.on(IpcKey.HOME_DIRECTORY_PATH, HomeDirectoryPathRequestBehavior);
-MainIpcModule.on(IpcKey.FILE_CONTENT, FileContentRequestBehavior);
-MainIpcModule.on(IpcKey.FILE_CREATION, FileCreationRequestBehavior);
-MainIpcModule.on(IpcKey.FILE_DELETION, FileDeletionRequestBehavior);
-MainIpcModule.on(IpcKey.DIRECTORY_CONTENT, DirectoryContentRequestBehavior);
-MainIpcModule.on(IpcKey.SPENDEE_EXPORT_PARSING, SpendeeExportParsingBehavior);
+MainIpcModule.on(IpcKey.PROMPT_FILE_PATH, FilePathRequestConsumer);
+MainIpcModule.on(IpcKey.HOME_DIRECTORY_PATH, HomeDirectoryPathRequestConsumer);
+MainIpcModule.on(IpcKey.FILE_CONTENT, FileContentRequestConsumer);
+MainIpcModule.on(IpcKey.FILE_CREATION, FileCreationRequestConsumer);
+MainIpcModule.on(IpcKey.FILE_DELETION, FileDeletionRequestConsumer);
+MainIpcModule.on(IpcKey.DIRECTORY_CONTENT, DirectoryContentRequestConsumer);
+MainIpcModule.on(IpcKey.SPENDEE_EXPORT_PARSING, SpendeeExportParsingConsumer);
 
 MainLoggingModule.logInfo(IpcSource.Main, "Index", "IPC Listeners Attached");
