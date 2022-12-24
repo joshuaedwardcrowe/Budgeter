@@ -1,5 +1,5 @@
 import StorageModule from "../../modules/StorageModule";
-import MainIpcModule from "../../modules/MainIpcModule";
+import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import IFileCreationRequest from "../../models/file/IFileCreationRequest";
 import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 

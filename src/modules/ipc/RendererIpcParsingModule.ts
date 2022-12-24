@@ -1,9 +1,9 @@
 import RendererIpcModule from "./RendererIpcModule";
-import ISpendeeExportParsingRequest from "../models/parsing/ISpendeeExportParsingRequest";
-import ISpendeeExportParsingResponse from "../models/parsing/ISpendeeExportParsingResponse";
-import ITransaction from "../models/transaction/ITransaction";
-import IpcKey from "../models/IpcKey";
-import IpcSource from "../models/IpcSource";
+import ISpendeeExportParsingRequest from "../../models/parsing/ISpendeeExportParsingRequest";
+import ISpendeeExportParsingResponse from "../../models/parsing/ISpendeeExportParsingResponse";
+import ITransaction from "../../models/transaction/ITransaction";
+import IpcKey from "../../models/IpcKey";
+import IpcSource from "../../models/IpcSource";
 
 class RendererIpcParsingModule extends RendererIpcModule {
     public askForSpendeeExportParsing(source: IpcSource, exportFilePath: string): void {

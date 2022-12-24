@@ -1,13 +1,13 @@
 import RendererIpcModule from "./RendererIpcModule";
-import IFilePathPromptRequest from "../models/file/IFilePathPromptRequest";
-import IFilePathPromptResponse from "../models/file/IFilePathPromptResponse";
-import IFileContentRequest from "../models/file/IFIleContentRequest";
-import IFileContentResponse from "../models/file/IFileContentResponse";
-import IFileCreationRequest from "../models/file/IFileCreationRequest";
-import IResponse from "../models/IResponse";
-import IpcKey from "../models/IpcKey";
-import IpcSource from "../models/IpcSource";
-import IFileDeletionRequest from "../models/file/IFileDeletionRequest";
+import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
+import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
+import IFileContentRequest from "../../models/file/IFIleContentRequest";
+import IFileContentResponse from "../../models/file/IFileContentResponse";
+import IFileCreationRequest from "../../models/file/IFileCreationRequest";
+import IResponse from "../../models/IResponse";
+import IpcKey from "../../models/IpcKey";
+import IpcSource from "../../models/IpcSource";
+import IFileDeletionRequest from "../../models/file/IFileDeletionRequest";
 
 class RendererIpcFileModule extends RendererIpcModule {
     public async resolvePromptedForFilePath(): Promise<string> {

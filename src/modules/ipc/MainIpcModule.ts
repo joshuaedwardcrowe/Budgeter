@@ -1,14 +1,14 @@
 import { ipcMain } from "electron";
-import MainLoggingModule from "./logging/MainLoggingModule";
-import WindowModule from "./WindowModule";
-import IpcChannel from "../models/IpcChannel";
-import IResponse from "../models/IResponse";
-import IpcStatus from "../models/IpcStatus";
-import IpcSource from "../models/IpcSource";
-import IRequest from "../models/IRequest";
-import IpcKey from "../models/IpcKey";
-import IMainBehaviorLoggingModule from "./logging/IMainBehaviorLoggingModule";
-import MainBehaviorLoggingModule from "./logging/MainBehaviorLoggingModule";
+import MainLoggingModule from "../logging/MainLoggingModule";
+import WindowModule from "../WindowModule";
+import IpcChannel from "../../models/IpcChannel";
+import IResponse from "../../models/IResponse";
+import IpcStatus from "../../models/IpcStatus";
+import IpcSource from "../../models/IpcSource";
+import IRequest from "../../models/IRequest";
+import IpcKey from "../../models/IpcKey";
+import IMainBehaviorLoggingModule from "../logging/IMainBehaviorLoggingModule";
+import MainBehaviorLoggingModule from "../logging/MainBehaviorLoggingModule";
 
 export default class MainIpcModule {
     static on<TRequest extends IRequest>(key: IpcKey, handler: (logging: IMainBehaviorLoggingModule, request: TRequest) => Promise<void>): void {

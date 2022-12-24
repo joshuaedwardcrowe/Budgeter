@@ -3,7 +3,7 @@ import ISpendeeExportParsingRequest from "../../models/parsing/ISpendeeExportPar
 import StorageModule from "../../modules/StorageModule";
 import ITransaction from "../../models/transaction/ITransaction";
 import TransactionMapper from "../../mappers/TransactionMapper";
-import MainIpcModule from "../../modules/MainIpcModule";
+import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import ISpendeeExportParsingResponse from "../../models/parsing/ISpendeeExportParsingResponse";
 import IMainBehaviorLoggingModule from "../../modules/logging/IMainBehaviorLoggingModule";
 

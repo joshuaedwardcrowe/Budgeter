@@ -1,6 +1,6 @@
 import {app, ipcMain} from 'electron';
 import MainLoggingModule from "./modules/logging/MainLoggingModule";
-import MainIpcModule from "./modules/MainIpcModule";
+import MainIpcModule from "./modules/ipc/MainIpcModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";

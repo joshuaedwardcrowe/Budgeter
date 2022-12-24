@@ -1,10 +1,10 @@
 import RendererIpcModule from "./RendererIpcModule";
-import IHomeDirectoryPathResponse from "../models/directory/IHomeDirectoryPathResponse";
-import IDirectoryContentRequest from "../models/directory/IDirectoryContentRequest";
-import IDirectoryContentResponse from "../models/directory/IDirectoryContentResponse";
-import IpcKey from "../models/IpcKey";
-import IRequest from "../models/IRequest";
-import IpcSource from "../models/IpcSource";
+import IHomeDirectoryPathResponse from "../../models/directory/IHomeDirectoryPathResponse";
+import IDirectoryContentRequest from "../../models/directory/IDirectoryContentRequest";
+import IDirectoryContentResponse from "../../models/directory/IDirectoryContentResponse";
+import IpcKey from "../../models/IpcKey";
+import IRequest from "../../models/IRequest";
+import IpcSource from "../../models/IpcSource";
 
 class RendererIpcDirectoryModule extends RendererIpcModule {
     public async resolveHomeDirectoryPath(): Promise<string> {

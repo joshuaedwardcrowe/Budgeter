@@ -1,10 +1,10 @@
 import { ipcRenderer } from "electron";
-import RendererLoggingModule from "./RendererLoggingModule";
-import IRequest from "../models/IRequest";
-import IResponse from "../models/IResponse";
-import IpcKey from "../models/IpcKey";
-import IpcStatus from "../models/IpcStatus";
-import IpcChannel from "../models/IpcChannel";
+import RendererLoggingModule from "../logging/RendererLoggingModule";
+import IRequest from "../../models/IRequest";
+import IResponse from "../../models/IResponse";
+import IpcKey from "../../models/IpcKey";
+import IpcStatus from "../../models/IpcStatus";
+import IpcChannel from "../../models/IpcChannel";
 
 export default class RendererIpcModule {
     protected sendIpcMessage<TRequest extends IRequest>(request: TRequest): void {
@@ -36,7 +36,7 @@ export default class RendererIpcModule {
             throw new Error(`'${key}' Failed`);
         }
     }
-    
+
     private createIpcListener<TResponse extends IResponse>(channel: IpcChannel): Promise<TResponse> {
         const stringified: string = channel.stringify();
 

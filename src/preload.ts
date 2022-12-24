@@ -1,7 +1,7 @@
 import { contextBridge } from "electron";
-import RendererIpcFileModule from "./modules/RendererIpcFileModule";
-import RendererIpcDirectoryModule from "./modules/RendererIpcDirectoryModule";
-import RendererIpcParsingModule from "./modules/RendererIpcParsingModule";
+import RendererIpcFileModule from "./modules/ipc/RendererIpcFileModule";
+import RendererIpcDirectoryModule from "./modules/ipc/RendererIpcDirectoryModule";
+import RendererIpcParsingModule from "./modules/ipc/RendererIpcParsingModule";
 
 const askToPromptForFilePath = RendererIpcFileModule.askToPromptForFilePath.bind(RendererIpcFileModule);
 const resolvePromptedForFilePath = RendererIpcFileModule.resolvePromptedForFilePath.bind(RendererIpcFileModule);

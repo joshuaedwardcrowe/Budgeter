@@ -2,7 +2,7 @@ import './index.css';
 import {createApp} from "vue";
 import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
-import RendererLoggingModule from "./modules/RendererLoggingModule";
+import RendererLoggingModule from "./modules/logging/RendererLoggingModule";
 import ITransaction from "./models/transaction/ITransaction";
 import BudgetCategoryMapper from "./mappers/BudgetCategoryMapper";
 import Budget from "./models/budget/Budget";

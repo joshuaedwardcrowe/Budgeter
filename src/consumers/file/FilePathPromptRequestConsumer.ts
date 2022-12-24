@@ -1,6 +1,6 @@
 import {OpenDialogOptions, OpenDialogReturnValue } from "electron";
 import WindowModule from "../../modules/WindowModule";
-import MainIpcModule from "../../modules/MainIpcModule";
+import MainIpcModule from "../../modules/ipc/MainIpcModule";
 import IFilePathPromptRequest from "../../models/file/IFilePathPromptRequest";
 import IFilePathPromptResponse from "../../models/file/IFilePathPromptResponse";
 import * as constants from "../../constants";
