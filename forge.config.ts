@@ -26,6 +26,14 @@ const config: ForgeConfig = {
               js: './src/preload.ts',
             },
           },
+          {
+            html: './src/windows/ReviewTransactions/ReviewTransactions.html',
+            js: './src/windows/ReviewTransactions/ReviewTransactions.ts',
+            name: 'review_transactions_window',
+            preload: {
+              js: './src/preload.ts'
+            }
+          }
         ],
       },
     }),

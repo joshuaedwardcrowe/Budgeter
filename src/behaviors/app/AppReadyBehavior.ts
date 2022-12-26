@@ -1,29 +1,23 @@
 import WindowModule from "../../modules/WindowModule";
 import MainLoggingModule from "../../modules/logging/MainLoggingModule";
 import ConfigurationModule from "../../modules/ConfigurationModule";
-import IBudgeterConfiguration from "../../models/IBudgeterConfiguration";
-import WindowConfigurationMapper from "../../mappers/WindowConfigurationMapper";
-import WindowWebConfigurationMapper from "../../mappers/WindowWebConfigurationMapper";
+import BudgeterConfiguration from "../../models/BudgeterConfiguration";
 import IpcSource from "../../models/IpcSource";
 import * as constants from "../../constants";
-import IWindowWebConfiguration from "../../models/window/IWindowWebConfiguration";
-import IWindowConfiguration from "../../models/window/IWindowConfiguration";
+import IBudgeterWindowConfiguration from "../../models/IBudgeterWindowConfiguration";
 
 export default async function AppReadyBehavior(load: string, preload: string) {
     try {
-        const configuration: IBudgeterConfiguration = await ConfigurationModule.getConfiguration();
+        const configuration: BudgeterConfiguration = await ConfigurationModule.getConfiguration();
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, "Successfully Got Config");
 
-        const windowWebConfiguration: IWindowWebConfiguration = WindowWebConfigurationMapper.fromBudgeterConfiguration(configuration);
-        windowWebConfiguration.preload = preload;
+        const indexConfiguration: IBudgeterWindowConfiguration = configuration.windows.find(window => window.title == IpcSource.Index)
+        indexConfiguration.webPreferences.preload = preload;
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Web Configuration`);
 
-        const windowConfiguration: IWindowConfiguration = WindowConfigurationMapper.fromBudgeterConfiguration(configuration);
-        windowConfiguration.source = IpcSource.Index;
-        windowConfiguration.webPreferences = windowWebConfiguration;
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Configuration`);
 
-        const window = await WindowModule.createWindow(windowConfiguration);
+        const window = await WindowModule.createWindow(IpcSource.Index, indexConfiguration);
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window: ${window.title}`);
 
         await window.loadURL(load);

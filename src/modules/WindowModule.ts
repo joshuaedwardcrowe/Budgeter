@@ -1,8 +1,7 @@
 import { BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
-import IWindowConfiguration from "../models/window/IWindowConfiguration";
 import IpcSource from "../models/IpcSource";
 import IResponse from "../models/IResponse";
-import MainLoggingModule from "./logging/MainLoggingModule";
+import IBudgeterWindowConfiguration from "../models/IBudgeterWindowConfiguration";
 
 class WindowModule {
     windows: Map<IpcSource, BrowserWindow>;
@@ -19,9 +18,9 @@ class WindowModule {
         return this.getWindows().length >= 1;
     }
 
-    async createWindow(config: IWindowConfiguration) {
+    async createWindow(source: IpcSource, config: IBudgeterWindowConfiguration) {
         const window = new BrowserWindow(config);
-        this.windows.set(config.source, window);
+        this.windows.set(source, window);
         return window;
     }
 
