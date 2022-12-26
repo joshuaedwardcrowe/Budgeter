@@ -28,7 +28,6 @@ createApp({
         async reviewTransactions(category: BudgetCategory) {
             const transactions = toRaw(category.transactions);
             modules.windows.askForReviewTransactionsWindow(IpcSource.Index, transactions);
-            await modules.simple.waitForReviewTransactionsWindow();
         },
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
@@ -52,6 +51,7 @@ createApp({
             this.spendeeExports = this.spendeeExports.filter(se => !se.fileName == info.fileName);
         },
         async getExistingSpendeeExports() {
+            // TODO: Can I use session storage to reduce the effort here.
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const budgeterDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 

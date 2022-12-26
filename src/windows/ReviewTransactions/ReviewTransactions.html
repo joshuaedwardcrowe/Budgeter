@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Budgeter - Review Transactions</title>
+    </head>
+    <body>
+        <div id="vue-app">
+            <h1>{{header}}</h1>
+            <table>
+                <tr>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>Note</th>
+                    <th>Labels</th>
+                    <th>Include/Exclude</th>
+                </tr>
+                <tr v-for="transaction in transactions">
+                    <td>£{{transaction.amount}}</td>
+                    <td>{{transaction.currency}}</td>
+                    <td>{{transaction.note}}</td>
+                    <td>
+                        <ul>
+                            <li v-for="label in transaction.labels">{{label}}</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <button>Exclude</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+
+

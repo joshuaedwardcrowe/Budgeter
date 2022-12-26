@@ -719,11 +719,6 @@
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.0.tgz#2b35eccfcee7d38cd72ad99232fbd58bffb3c84d"
   integrity sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==
 
-"@types/roarr@^2.14.3":
-  version "2.14.3"
-  resolved "https://registry.yarnpkg.com/@types/roarr/-/roarr-2.14.3.tgz#0dd2f35a1a8a890efdf17f3034d6bb9ccf9ce702"
-  integrity sha512-KDOMl7AP3vY0dLs4zsA49vvCv7itMFo7wBdvOFDQihJeTllmVdpgphBRW/jLVdmi47gXzOWGXZ+d2nZ1K/f6yQ==
-
 "@types/semver@^7.3.12":
   version "7.3.13"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.13.tgz#da4bfd73f49bd541d28920ab0e2bf0ee80f71c91"

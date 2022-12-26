@@ -36,7 +36,9 @@ export default class ConfigurationModule {
         return JSON.parse(fileContents);
     }
     private static getDefaultConfiguration(): BudgeterConfiguration {
-        return new BudgeterConfiguration([IpcSource.Index].map(this.getDefaultWindowConfiguration));
+        // TODO: Need to find a better way to do this.
+        const windowNames = [IpcSource.Index, IpcSource.ReviewTransactions]
+        return new BudgeterConfiguration(windowNames.map(this.getDefaultWindowConfiguration));
     }
     private static getDefaultWindowConfiguration(title: IpcSource): IBudgeterWindowConfiguration {
         return {
