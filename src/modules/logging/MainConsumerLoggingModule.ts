@@ -1,9 +1,8 @@
 import IpcSource from "../../models/IpcSource";
 import IpcKey from "../../models/IpcKey";
-import IMainConsumerLoggingModule from "./IMainConsumerLoggingModule";
 import MainLoggingModule from "./MainLoggingModule";
 
-export default class MainConsumerLoggingModule implements IMainConsumerLoggingModule {
+export default class MainConsumerLoggingModule {
     private readonly source: IpcSource;
     private readonly key: IpcKey;
     private readonly locationName: string;

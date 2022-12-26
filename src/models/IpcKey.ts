@@ -5,7 +5,8 @@ enum IpcKey {
     FILE_DELETION = "fileDeletion",
     HOME_DIRECTORY_PATH = "homeDirectoryPath",
     DIRECTORY_CONTENT = "directoryContent",
-    SPENDEE_EXPORT_PARSING = "spendeeExportParsing"
+    SPENDEE_EXPORT_PARSING = "spendeeExportParsing",
+    REVIEW_TRANSACTIONS_WINDOW = "reviewTransactionsWindow"
 }
 
 export default IpcKey;

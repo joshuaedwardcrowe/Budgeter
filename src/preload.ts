@@ -2,6 +2,7 @@ import { contextBridge } from "electron";
 import RendererIpcFileModule from "./modules/ipc/RendererIpcFileModule";
 import RendererIpcDirectoryModule from "./modules/ipc/RendererIpcDirectoryModule";
 import RendererIpcParsingModule from "./modules/ipc/RendererIpcParsingModule";
+import RendererIpcWindowsModule from "./modules/ipc/RendererIpcWindowsModule";
 
 const askToPromptForFilePath = RendererIpcFileModule.askToPromptForFilePath.bind(RendererIpcFileModule);
 const resolvePromptedForFilePath = RendererIpcFileModule.resolvePromptedForFilePath.bind(RendererIpcFileModule);
@@ -19,6 +20,9 @@ const resolveDirectoryContent = RendererIpcDirectoryModule.resolveDirectoryConte
 
 const askForSpendeeExportParsing = RendererIpcParsingModule.askForSpendeeExportParsing.bind(RendererIpcParsingModule);
 const resolveSpendeeExportParsing = RendererIpcParsingModule.resolveSpendeeExportParsing.bind(RendererIpcParsingModule);
+
+const askForReviewTransactionsWindow = RendererIpcWindowsModule.askForReviewTransactionsWindow.bind(RendererIpcWindowsModule);
+const waitForReviewTransactionsWindow = RendererIpcWindowsModule.waitForReviewTransactionsWindow.bind(RendererIpcWindowsModule);
 
 contextBridge.exposeInMainWorld("modules", {
     file: {
@@ -51,5 +55,10 @@ contextBridge.exposeInMainWorld("modules", {
         // SPENDEE_EXPORT_PARSING
         askForSpendeeExportParsing,
         resolveSpendeeExportParsing
+    },
+    windows: {
+        // REVIEW_TRANSACTIONS_WINDOW
+        askForReviewTransactionsWindow,
+        waitForReviewTransactionsWindow
     }
 });

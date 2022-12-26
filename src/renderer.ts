@@ -1,5 +1,5 @@
 import './index.css';
-import {createApp} from "vue";
+import {createApp, toRaw } from "vue";
 import SpendeeParserModule from "./modules/SpendeeExportParserModule";
 import ISpendeeExportInfo from "./models/ISpendeeExportInfo";
 import RendererLoggingModule from "./modules/logging/RendererLoggingModule";
@@ -9,6 +9,7 @@ import Budget from "./models/budget/Budget";
 import BudgetHistory from "./models/budget/BudgetHistory";
 import * as constants from "./constants";
 import IpcSource from "./models/IpcSource";
+import BudgetCategory from "./models/budget/BudgetCategory";
 
 // TODO: Step 2 is to store the Budget model generated from CSV in a JSON file.
 
@@ -23,6 +24,11 @@ createApp({
     methods: {
         backToHome() {
             this.currentBudget = null;
+        },
+        async reviewTransactions(category: BudgetCategory) {
+            const transactions = toRaw(category.transactions);
+            modules.windows.askForReviewTransactionsWindow(IpcSource.Index, transactions);
+            await modules.simple.waitForReviewTransactionsWindow();
         },
         async createNewBudget(info: ISpendeeExportInfo) {
             const homeDirectoryPath = await this.getHomeDirectoryPath();

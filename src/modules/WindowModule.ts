@@ -18,7 +18,7 @@ class WindowModule {
         return this.getWindows().length >= 1;
     }
 
-    async createWindow(source: IpcSource, config: IBudgeterWindowConfiguration) {
+    createWindow(source: IpcSource, config: IBudgeterWindowConfiguration): BrowserWindow {
         const window = new BrowserWindow(config);
         this.windows.set(source, window);
         return window;

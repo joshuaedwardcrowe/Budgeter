@@ -1,4 +1,4 @@
-import {app, ipcMain} from 'electron';
+import {app} from 'electron';
 import MainLoggingModule from "./modules/logging/MainLoggingModule";
 import MainIpcModule from "./modules/ipc/MainIpcModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
@@ -11,6 +11,7 @@ import FileCreationRequestConsumer from "./consumers/file/FileCreationRequestCon
 import FileDeletionRequestConsumer from "./consumers/file/FileDeletionRequestConsumer";
 import DirectoryContentRequestConsumer from "./consumers/directory/DirectoryContentRequestConsumer";
 import SpendeeExportParsingConsumer from "./consumers/parsing/SpendeeExportParsingConsumer";
+import ReviewTransactionsWindowConsumer from "./consumers/window/ReviewTransactionsWindowConsumer";
 import * as constants from "./constants";
 import IpcKey from "./models/IpcKey";
 import IpcSource from "./models/IpcSource";
@@ -40,5 +41,6 @@ MainIpcModule.on(IpcKey.FILE_CREATION, FileCreationRequestConsumer);
 MainIpcModule.on(IpcKey.FILE_DELETION, FileDeletionRequestConsumer);
 MainIpcModule.on(IpcKey.DIRECTORY_CONTENT, DirectoryContentRequestConsumer);
 MainIpcModule.on(IpcKey.SPENDEE_EXPORT_PARSING, SpendeeExportParsingConsumer);
+MainIpcModule.on(IpcKey.REVIEW_TRANSACTIONS_WINDOW, ReviewTransactionsWindowConsumer);
 
 MainLoggingModule.logInfo(IpcSource.Main, "Index", "IPC Listeners Attached");

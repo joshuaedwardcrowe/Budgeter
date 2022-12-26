@@ -35,12 +35,12 @@
                 <th>Budget Amount</th>
                 <th>Review Transactions</th>
             </tr>
-            <tr v-for="budgetHistory in currentBudget.history.getExpenseCategories()">
-                <td>{{budgetHistory.name}}</td>
-                <td>{{budgetHistory.type}}</td>
-                <td>£{{budgetHistory.getTotalAmount()}}</td>
+            <tr v-for="budgetHistoryCategory in currentBudget.history.getExpenseCategories()">
+                <td>{{budgetHistoryCategory.name}}</td>
+                <td>{{budgetHistoryCategory.type}}</td>
+                <td>£{{budgetHistoryCategory.getTotalAmount()}}</td>
                 <td>
-                    <button>Review Transactions</button>
+                    <button @click="reviewTransactions(budgetHistoryCategory)">Review Transactions</button>
                 </td>
             </tr>
             </table>
