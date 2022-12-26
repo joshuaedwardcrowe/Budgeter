@@ -12,6 +12,8 @@ const CSV_PARSING_DATA = "data";
 const CSV_PARSING_END = "end";
 
 export default async function SpendeeExportParsingConsumer(logger: MainConsumerLoggingModule, { source, key, exportFilePath }: ISpendeeExportParsingRequest) {
+    logger.logDebug(`Received Spendee Export Parsing Request for ${exportFilePath}`);
+
     const fileExists = await StorageModule.tryCheckFileExists(exportFilePath);
     if (!fileExists) {
         MainIpcModule.sendFailure({
@@ -24,7 +26,7 @@ export default async function SpendeeExportParsingConsumer(logger: MainConsumerL
     }
 
     const content = await StorageModule.readFile(exportFilePath);
-    logger.logInfo(`Got File: ${exportFilePath}`);
+    logger.logDebug(`Got File: ${exportFilePath}`);
 
     const parser = parseString(content);
     const transactions: ITransaction[] = [];
@@ -39,17 +41,17 @@ export default async function SpendeeExportParsingConsumer(logger: MainConsumerL
             success: false
         })
 
-        logger.logInfo(`CSV Parsing Failed: ${error}`);
+        logger.logError(`CSV Parsing Failed: ${error}`);
     });
 
     parser.on(CSV_PARSING_DATA, row => {
-        logger.logInfo(`CSV Parsing Got Data ${getTransactionLength()}`);
+        logger.logDebug(`CSV Parsing Got Data ${getTransactionLength()}`);
         const transaction = TransactionMapper.fromCSVRow(row);
         transactions.push(transaction);
     });
 
     parser.on(CSV_PARSING_END, () => {
-        logger.logInfo("CSV Parsing Removing Header Row");
+        logger.logDebug("CSV Parsing Removing Header Row");
         transactions.shift();
 
         MainIpcModule.sendSuccess<ISpendeeExportParsingResponse>({

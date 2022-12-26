@@ -12,15 +12,22 @@ import IReviewTransactionsWindowResponse from "../../models/window/IReviewTransa
 declare const REVIEW_TRANSACTIONS_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const wait = () => new Promise(r => setTimeout(r, 1000));
-
 export default async function ReviewTransactionsWindowConsumer(logger: MainConsumerLoggingModule, { key, transactions }: IReviewTransactionsWindowRequest) {
+    logger.logDebug(`Received Review Transactions Window Request`);
+
     const config = await ConfigurationModule.getConfiguration();
+    logger.logDebug(`Got Configuration`);
+
     const reviewTransactionsConfiguration = config.windows.find(window => window.title === IpcSource.ReviewTransactions);
+    if (reviewTransactionsConfiguration === null) {
+        logger.logDebug(`Got Configuration for ${IpcSource.ReviewTransactions}`);
+    }
+
     reviewTransactionsConfiguration.webPreferences.preload = MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY;
+    logger.logDebug(`Assigned Preload of ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
 
     const window = WindowModule.createWindow(IpcSource.ReviewTransactions, reviewTransactionsConfiguration);
-    logger.logInfo(`Created Window: ${window.title}`);
+    logger.logDebug(`Created Window: ${window.title}`);
 
     // Dom needs to be ready so lisener starts.
     window.webContents.once('dom-ready', async () => {
@@ -32,14 +39,16 @@ export default async function ReviewTransactionsWindowConsumer(logger: MainConsu
         }
 
         MainIpcModule.sendSuccess(response);
+
+        logger.logInfo(`Successfully Sent ${transactions.length} ${transactions[0].categoryName} Transactions to Review Window\``)
     });
 
     await window.loadURL(REVIEW_TRANSACTIONS_WINDOW_WEBPACK_ENTRY);
-    logger.logInfo(`Loaded URL: ${REVIEW_TRANSACTIONS_WINDOW_WEBPACK_ENTRY}`);
+    logger.logDebug(`Loaded URL: ${REVIEW_TRANSACTIONS_WINDOW_WEBPACK_ENTRY}`);
 
     window.webContents.openDevTools();
-    logger.logInfo("Opened Window Developer Tools");
+    logger.logDebug("Opened Window Developer Tools");
 
     window.show();
-
+    logger.logDebug(`Showed Review Transactions Window`)
 }

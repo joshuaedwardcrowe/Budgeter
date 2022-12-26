@@ -1,3 +1,5 @@
+// TODO: If these are only used in one file, remove them from here.
+
 export const ENVIRONMENT_DARWIN_NAME = "darwin";
 export const ENVIRONMENT_DOWNLOADS_FOLDER = "Downloads";
 

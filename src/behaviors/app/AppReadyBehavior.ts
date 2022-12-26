@@ -9,25 +9,23 @@ import IBudgeterWindowConfiguration from "../../models/IBudgeterWindowConfigurat
 export default async function AppReadyBehavior(load: string, preload: string) {
     try {
         const configuration: BudgeterConfiguration = await ConfigurationModule.getConfiguration();
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, "Successfully Got Config");
+        MainLoggingModule.logDebug(IpcSource.Main, AppReadyBehavior.name, "Successfully Got Config");
 
         const indexConfiguration: IBudgeterWindowConfiguration = configuration.windows.find(window => window.title == IpcSource.Index)
         indexConfiguration.webPreferences.preload = preload;
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Web Configuration`);
-
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window Configuration`);
+        MainLoggingModule.logDebug(IpcSource.Main, AppReadyBehavior.name, `Created Window Configuration`);
 
         const window = await WindowModule.createWindow(IpcSource.Index, indexConfiguration);
         MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Created Window: ${window.title}`);
 
         await window.loadURL(load);
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Loaded URL: ${load}`);
+        MainLoggingModule.logDebug(IpcSource.Main, AppReadyBehavior.name, `Loaded URL: ${load}`);
 
         window.webContents.openDevTools();
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, "Opened Window Developer Tools");
+        MainLoggingModule.logDebug(IpcSource.Main, AppReadyBehavior.name, "Opened Window Developer Tools");
 
         window.show();
-        MainLoggingModule.logInfo(IpcSource.Main, AppReadyBehavior.name, `Showed Window: ${window.title}`);
+        MainLoggingModule.logDebug(IpcSource.Main, AppReadyBehavior.name, `Showed Window: ${window.title}`);
     } catch (e) {
         console.log(e);
         MainLoggingModule.logError(IpcSource.Main, AppReadyBehavior.name, "Failed to Create Window");

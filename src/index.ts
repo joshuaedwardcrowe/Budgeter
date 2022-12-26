@@ -4,7 +4,7 @@ import MainIpcModule from "./modules/ipc/MainIpcModule";
 import AppReadyBehavior from "./behaviors/app/AppReadyBehavior";
 import WindowAllClosedBehavior from "./behaviors/window/WindowAllClosedBehavior";
 import AppActivateBehavior from "./behaviors/app/AppActivateBehavior";
-import FilePathRequestConsumer from "./consumers/file/FilePathPromptRequestConsumer";
+import FilePathPromptRequest from "./consumers/file/FilePathPromptRequestConsumer";
 import HomeDirectoryPathRequestConsumer from "./consumers/directory/HomeDirectoryPathRequestConsumer";
 import FileContentRequestConsumer from "./consumers/file/FileContentRequestConsumer";
 import FileCreationRequestConsumer from "./consumers/file/FileCreationRequestConsumer";
@@ -27,14 +27,14 @@ if (require('electron-squirrel-startup')) {
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-MainLoggingModule.logInfo(IpcSource.Main,"Index",`Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
-MainLoggingModule.logInfo(IpcSource.Main, "Index",`Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
+MainLoggingModule.logDebug(IpcSource.Main,"Index",`Webpack Index Entry Point: ${MAIN_WINDOW_WEBPACK_ENTRY}`);
+MainLoggingModule.logDebug(IpcSource.Main, "Index",`Webpack Preload Entry Point: ${MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY}`);
 
 app.on(constants.APP_READY_EVENT, () => AppReadyBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY));
 app.on(constants.APP_ACTIVATE, () => AppActivateBehavior(MAIN_WINDOW_WEBPACK_ENTRY, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY))
 app.on(constants.APP_WINDOW_ALL_CLOSED, () => WindowAllClosedBehavior());
 
-MainIpcModule.on(IpcKey.PROMPT_FILE_PATH, FilePathRequestConsumer);
+MainIpcModule.on(IpcKey.PROMPT_FILE_PATH, FilePathPromptRequest);
 MainIpcModule.on(IpcKey.HOME_DIRECTORY_PATH, HomeDirectoryPathRequestConsumer);
 MainIpcModule.on(IpcKey.FILE_CONTENT, FileContentRequestConsumer);
 MainIpcModule.on(IpcKey.FILE_CREATION, FileCreationRequestConsumer);
@@ -43,4 +43,4 @@ MainIpcModule.on(IpcKey.DIRECTORY_CONTENT, DirectoryContentRequestConsumer);
 MainIpcModule.on(IpcKey.SPENDEE_EXPORT_PARSING, SpendeeExportParsingConsumer);
 MainIpcModule.on(IpcKey.REVIEW_TRANSACTIONS_WINDOW, ReviewTransactionsWindowConsumer);
 
-MainLoggingModule.logInfo(IpcSource.Main, "Index", "IPC Listeners Attached");
+MainLoggingModule.logDebug(IpcSource.Main, "Index", "IPC Listeners Attached");

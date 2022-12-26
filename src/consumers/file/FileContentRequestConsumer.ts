@@ -5,6 +5,8 @@ import IFileContentResponse from "../../models/file/IFileContentResponse";
 import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
 export default async function FileContentRequestConsumer(logger: MainConsumerLoggingModule, { source, key, filePath }: IFileContentRequest) {
+    logger.logDebug(`Received File Content Request for ${filePath}`)
+
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
     if (!fileExists) {
@@ -14,7 +16,6 @@ export default async function FileContentRequestConsumer(logger: MainConsumerLog
             success: false
         })
 
-        // TODO: A nicer way to build the logger for this behavior?
         logger.logWarning(`No File: ${filePath}`);
         return;
     }
@@ -29,7 +30,7 @@ export default async function FileContentRequestConsumer(logger: MainConsumerLog
             fileContent
         })
 
-        logger.logInfo(`File Found: ${filePath}`);
+        logger.logInfo(`Got File Content: ${filePath}`);
     } catch (e) {
         MainIpcModule.sendFailure({
             source,
@@ -37,6 +38,6 @@ export default async function FileContentRequestConsumer(logger: MainConsumerLog
             success: false
         })
 
-        logger.logWarning(`No File Content: ${filePath} [${source}]`);
+        logger.logError(`No File Content: ${filePath} [${source}]`);
     }
 }

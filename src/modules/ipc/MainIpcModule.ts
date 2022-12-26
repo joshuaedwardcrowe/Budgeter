@@ -22,13 +22,17 @@ export default class MainIpcModule {
     static sendSuccess<TResponse extends IResponse>(response: TResponse): void {
         const successChannel = new IpcChannel(response.key, IpcStatus.SUCCESS);
         const successChannelStringified = successChannel.stringify();
-        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${successChannelStringified} to ${response.source}`);
+        MainLoggingModule.logDebug(this.getSource(response.source), MainIpcModule.name, `Sent: ${successChannelStringified}`);
         WindowModule.sendMessage(response.source, successChannelStringified, response);
     }
     static sendFailure(response: IResponse): void {
         const failureChannel = new IpcChannel(response.key, IpcStatus.FAILURE);
         const failureChannelStringified = failureChannel.stringify();
-        MainLoggingModule.logInfo(IpcSource.Main, "MainIpcModule", `Sent: ${failureChannelStringified} to ${response.source}`);
+        MainLoggingModule.logDebug(this.getSource(response.source), MainIpcModule.name, `Sent: ${failureChannelStringified}`);
         WindowModule.sendMessage(response.source, failureChannelStringified, response);
+    }
+
+    private static getSource(recipientSource: IpcSource): string {
+        return `${IpcSource.Main} for ${recipientSource}`;
     }
 }

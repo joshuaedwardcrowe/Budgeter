@@ -1,5 +1,6 @@
 import {createLogger, format, Logger, LoggerOptions, transports} from "winston";
 import LoggingLevel from "../../models/LoggingLevel";
+import loggingLevel from "../../models/LoggingLevel";
 
 class MainLoggingModule {
     private logger: Logger;
@@ -13,7 +14,9 @@ class MainLoggingModule {
         this.logger.log(level, `[[${source}]] ${locationName} - ${message}`);
     }
 
-    // TODO: Need debug at some point.
+    logDebug(source: string, locationName: string, message: string) {
+        this.log(LoggingLevel.DEBUG, source, locationName, message);
+    }
     logInfo(source: string, locationName: string, message: string) {
         this.log(LoggingLevel.INFO, source, locationName, message);
     }
@@ -27,16 +30,16 @@ class MainLoggingModule {
     }
     private static getOptions(): LoggerOptions {
         const consoleTransport = new transports.Console({
+            level: LoggingLevel.DEBUG,
             format: format.combine(format.colorize(), format.simple())
         })
 
         return {
-            level: null,
             levels: {
-                "ok": 0,
-                "info": 1,
-                "warning": 2,
-                "error": 3
+                [LoggingLevel.DEBUG]: 3,
+                [LoggingLevel.INFO]: 2,
+                [loggingLevel.WARNING]: 1,
+                [LoggingLevel.ERROR]: 0
             },
             transports: [ consoleTransport ]
         }

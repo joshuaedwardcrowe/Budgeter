@@ -4,6 +4,8 @@ import IFileDeletionRequest from "../../models/file/IFileDeletionRequest";
 import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
 export default async function FileDeletionRequestConsumer(logger: MainConsumerLoggingModule, { source, key, filePath }: IFileDeletionRequest) {
+    logger.logDebug(`Received File Deletion Request for ${filePath}`);
+
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
     if (!fileExists) {
         MainIpcModule.sendFailure({

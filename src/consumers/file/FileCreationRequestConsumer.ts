@@ -4,7 +4,7 @@ import IFileCreationRequest from "../../models/file/IFileCreationRequest";
 import MainConsumerLoggingModule from "../../modules/logging/MainConsumerLoggingModule";
 
 export default async function FileCreationRequestConsumer(logger: MainConsumerLoggingModule, { source, key, filePath, fileContent }: IFileCreationRequest) {
-    logger.logInfo(`Got Request`);
+    logger.logDebug(`Received File Creation Request for ${filePath}`);
 
     const fileExists = await StorageModule.tryCheckFileExists(filePath);
 
@@ -16,7 +16,6 @@ export default async function FileCreationRequestConsumer(logger: MainConsumerLo
         })
 
         logger.logWarning(`File Exists: ${filePath}`);
-
         return;
     }
 
@@ -29,7 +28,7 @@ export default async function FileCreationRequestConsumer(logger: MainConsumerLo
             success: true
         });
 
-        logger.logInfo(`Resolved: ${filePath}`);
+        logger.logInfo(`Created File: ${filePath}`);
     } catch (e) {
         console.log(e);
 
@@ -39,6 +38,6 @@ export default async function FileCreationRequestConsumer(logger: MainConsumerLo
             success: false
         })
 
-        logger.logWarning(`Could Not Create File: ${filePath}`);
+        logger.logError(`Could Not Create File: ${filePath}`);
     }
 }

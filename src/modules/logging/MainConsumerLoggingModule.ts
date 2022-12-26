@@ -13,19 +13,23 @@ export default class MainConsumerLoggingModule {
         this.locationName = locationName;
     }
 
-    logInfo(message: string) {
+    public logDebug(message: string): void {
+        MainLoggingModule.logDebug(this.getSource(), this.locationName, message);
+    }
+
+    public logInfo(message: string): void {
         MainLoggingModule.logInfo(this.getSource(), this.locationName, message);
     }
 
-    logWarning(message: string) {
+    public logWarning(message: string): void {
         MainLoggingModule.logWarning(this.getSource(), this.locationName, message);
     }
 
-    public logError(message: string) {
+    public logError(message: string): void {
         MainLoggingModule.logError(this.getSource(), this.locationName, message);
     }
 
-    private getSource() {
+    private getSource(): string {
         return `${IpcSource.Main} for ${this.source}`;
     }
 }

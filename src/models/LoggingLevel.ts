@@ -1,5 +1,5 @@
 enum LoggingLevel {
-    OK = "ok",
+    DEBUG = "debug",
     INFO = "info",
     WARNING = "warning",
     ERROR = "error"
