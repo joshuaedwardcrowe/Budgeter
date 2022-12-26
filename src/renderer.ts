@@ -40,6 +40,15 @@ createApp({
             const budget: Budget = BudgetMapper.fromJson(fileContent);
             this.currentBudget = budget;
         },
+        async deleteBudget(info: IBudgetInfo) {
+            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}`;
+
+            modules.file.askForFileDeletion(IpcSource.Index, budgetPath);
+            await modules.file.waitForFileDeletion();
+
+            this.budgets = this.budgets.filter((budget: IBudgetInfo) => budget.name !== info.name);
+        },
         async reviewTransactions(category: BudgetCategory) {
             const transactions = toRaw(category.transactions);
             modules.windows.askForReviewTransactionsWindow(IpcSource.Index, transactions);
@@ -63,15 +72,21 @@ createApp({
             const budget = new Budget(this.newBudgetName, history);
 
             // TODO: This logic probs needs encapsulating somewhere more constant.
-            const budgetFileName = budget.name.split(' ').join('-');
+            const budgetFileNameWithoutSuffix = budget.name.split(' ').join('-');
+            const budgetFileName = `${budgetFileNameWithoutSuffix}.budget.json`;
 
-            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${budgetFileName}.budget.json`;
+            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${budgetFileName}`;
             const budgetContent = JSON.stringify(budget);
 
             modules.file.askForFileCreation(IpcSource.Index, budgetPath, budgetContent);
             await modules.file.waitForFileCreation();
 
-            this.budgets = [...this.budgets, budget];
+            const budgetInfo: IBudgetInfo = {
+                name: budget.name,
+                fileName: budgetFileName
+            }
+
+            this.budgets = [...this.budgets, budgetInfo];
 
             // Reset state.
             this.newBudgetName = null;

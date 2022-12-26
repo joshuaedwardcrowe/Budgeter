@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- TODO: Move into subfolder -->
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -68,11 +69,15 @@
                 <tr>
                     <th>Name</th>
                     <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
                 <tr v-for="budget in budgets">
                     <td>{{budget.name}}</td>
                     <td>
                         <button @click="openBudget(budget)">Edit</button>
+                    </td>
+                    <td>
+                        <button @click="deleteBudget(budget)">Delete</button>
                     </td>
                 </tr>
             </table>
