@@ -1,7 +1,7 @@
 import BudgetCategory from "./BudgetCategory";
 import TransactionType from "../transaction/TransactionType";
 
-export default class BudgetHistory {
+export default class BudgetChapter {
     categories: BudgetCategory[]
 
     constructor(categories: BudgetCategory[]) {

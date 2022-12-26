@@ -6,7 +6,7 @@ import RendererLoggingModule from "./modules/logging/RendererLoggingModule";
 import ITransaction from "./models/transaction/ITransaction";
 import BudgetCategoryMapper from "./mappers/BudgetCategoryMapper";
 import Budget from "./models/budget/Budget";
-import BudgetHistory from "./models/budget/BudgetHistory";
+import BudgetChapter from "./models/budget/BudgetChapter";
 import * as constants from "./constants";
 import IpcSource from "./models/IpcSource";
 import BudgetCategory from "./models/budget/BudgetCategory";
@@ -17,6 +17,10 @@ import BudgetCategory from "./models/budget/BudgetCategory";
 createApp({
     data: () => ({
         currentBudget: null,
+        budgets: [],
+        creatingNewBudget: false,
+        newBudgetName: null,
+        newBudgetExport: null,
         spendeeExports: [],
         homeDirectoryPath: null
     }),
@@ -29,19 +33,43 @@ createApp({
             const transactions = toRaw(category.transactions);
             modules.windows.askForReviewTransactionsWindow(IpcSource.Index, transactions);
         },
-        async createNewBudget(info: ISpendeeExportInfo) {
+        getNameForBudgetWithoutSpendeeExport() {
+            this.creatingNewBudget = true;
+        },
+        getNameForBudgetWithSpendeeExport(info: ISpendeeExportInfo) {
+            this.creatingNewBudget = true
+            this.newBudgetExport = info;
+        },
+        async createNewBudget() {
             const homeDirectoryPath = await this.getHomeDirectoryPath();
-            const spendeeExportPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}.csv`;
+            const spendeeExportPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${this.newBudgetExport.fileName}.csv`;
 
             modules.parsing.askForSpendeeExportParsing(IpcSource.Index, spendeeExportPath);
             const transactions: ITransaction[] = await modules.parsing.resolveSpendeeExportParsing();
 
             const categories = BudgetCategoryMapper.fromTransactions(transactions);
-            const history = new BudgetHistory(categories);
+            const history = new BudgetChapter(categories);
+            const budget = new Budget(this.newBudgetName, history);
 
-            this.currentBudget = new Budget(history);
+            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${this.newBudgetExport.fileName}.json`;
+            const budgetContent = JSON.stringify(budget);
+
+            modules.file.askForFileCreation(IpcSource.Index, budgetPath, budgetContent);
+            await modules.file.waitForFileCreation();
+
+            this.budgets = [...this.budgets, budget];
+
+            // Reset state.
+            this.newBudgetName = null;
+            this.newBudgetExport = null;
+            this.creatingNewBudget = false;
         },
         async deleteSpendeeExport(info: ISpendeeExportInfo) {
+            // Clear set new budget export if we're deleting it.
+            if (this.newBudgetExport === info) {
+                this.newBudgetExport = null;
+            }
+
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const spendeeExportPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}.csv`;
 
@@ -56,6 +84,7 @@ createApp({
             const budgeterDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
             modules.directory.askForDirectoryContent(IpcSource.Index, budgeterDirectoryPath);
+            // TODO: Use function name.
             RendererLoggingModule.logInfo("getExistingSpendeeExports", `Asking For Directory Content: ${homeDirectoryPath}`);
 
             const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent(IpcSource.Index);

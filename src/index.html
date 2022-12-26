@@ -7,6 +7,7 @@
   <body>
     <h1>Budgeter</h1>
     <div id="vue-app">
+        <!-- TODO: This might need its own window -->
         <div v-if="currentBudget !== null">
             Current Budget:
 
@@ -61,8 +62,36 @@
 
         </div>
         <div v-else>
+            <h1>Budgets</h1>
+            <button @click="getNameForBudgetWithoutSpendeeExport">Add Export</button>
+            <table v-if="budgets.length !== 0">
+                <tr>
+                    <th>Name</th>
+                    <th>Cash Flow</th>
+                    <th>Edit</th>
+                </tr>
+                <tr v-for="budget in budgets">
+                    <td>{{budget.name}}</td>
+                    <td>{{budget.getCashFlow()}}</td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+            </table>
+            <p v-else>No budgets.</p>
+            <div class="creation" v-if="creatingNewBudget">
+                <input type="text" v-model="newBudgetName" />
+                <select v-model="newBudgetExport">
+                    <option :value="null">No Export</option>
+                    <option v-for="spendeeExport in spendeeExports" :value="spendeeExport">{{spendeeExport.accountName}} - {{spendeeExport.created}}</option>
+                </select>
+                <button @click="createNewBudget" :disabled="this.newBudgetExport === null" >Create {{newBudgetName}} Budget</button>
+                <p v-if="this.newBudgetExport === null">Cannot create a new budget without a Spendee Export as base.</p>
+            </div>
+
+            <h1>Exports</h1>
             <button @click="askForSpendeeExport">Add Export</button>
-            <table>
+            <table v-if="spendeeExports.length !== 0">
                 <tr>
                     <th>Account</th>
                     <th>Added</th>
@@ -73,13 +102,14 @@
                     <td>{{spendeeExport.accountName}}</td>
                     <td>{{spendeeExport.created}}</td>
                     <td>
-                        <button @click="createNewBudget(spendeeExport)">Create New Budget</button>
+                        <button @click="getNameForBudgetWithSpendeeExport(spendeeExport)">Create New Budget</button>
                     </td>
                     <td>
                         <button @click="deleteSpendeeExport(spendeeExport)">Delete Spendee Export</button>
                     </td>
                 </tr>
             </table>
+            <p v-else>No Spendee Exports.</p>
         </div>
     </div>
   </body>
