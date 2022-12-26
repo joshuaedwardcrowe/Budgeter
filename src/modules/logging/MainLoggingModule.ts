@@ -22,7 +22,7 @@ class MainLoggingModule {
         this.log(LoggingLevel.WARNING, source, locationName, message);
     }
 
-    logError(source: string, locationName: string, message: string) {
+    logError(source: string, locationName: string, message: string) { // TODO: Need to log exceptions too.
         this.log(LoggingLevel.ERROR, source, locationName, message);
     }
     private static getOptions(): LoggerOptions {

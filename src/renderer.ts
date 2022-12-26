@@ -10,9 +10,10 @@ import BudgetChapter from "./models/budget/BudgetChapter";
 import * as constants from "./constants";
 import IpcSource from "./models/IpcSource";
 import BudgetCategory from "./models/budget/BudgetCategory";
-
-// TODO: Step 2 is to store the Budget model generated from CSV in a JSON file.
-
+import BudgetInfoValidator from "../validators/BudgetInfoValidator";
+import BudgetInfoMapper from "./mappers/BudgetInfoMapper";
+import IBudgetInfo from "./models/IBudgetInfo";
+import BudgetMapper from "./mappers/BudgetMapper";
 
 createApp({
     data: () => ({
@@ -24,10 +25,20 @@ createApp({
         spendeeExports: [],
         homeDirectoryPath: null
     }),
-    mounted: async function() { await this.getExistingSpendeeExports(); },
+    mounted: async function() { await this.getExisting(); },
     methods: {
         backToHome() {
             this.currentBudget = null;
+        },
+        async openBudget(info: IBudgetInfo) {
+            const homeDirectoryPath = await this.getHomeDirectoryPath();
+            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${info.fileName}`;
+
+            modules.file.askForFileContent(IpcSource.Index, budgetPath);
+            const fileContent: string = await modules.file.resolveFileContent();
+
+            const budget: Budget = BudgetMapper.fromJson(fileContent);
+            this.currentBudget = budget;
         },
         async reviewTransactions(category: BudgetCategory) {
             const transactions = toRaw(category.transactions);
@@ -51,7 +62,10 @@ createApp({
             const history = new BudgetChapter(categories);
             const budget = new Budget(this.newBudgetName, history);
 
-            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${this.newBudgetExport.fileName}.json`;
+            // TODO: This logic probs needs encapsulating somewhere more constant.
+            const budgetFileName = budget.name.split(' ').join('-');
+
+            const budgetPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}/${budgetFileName}.budget.json`;
             const budgetContent = JSON.stringify(budget);
 
             modules.file.askForFileCreation(IpcSource.Index, budgetPath, budgetContent);
@@ -76,25 +90,36 @@ createApp({
             modules.file.askForFileDeletion(IpcSource.Index, spendeeExportPath);
             await modules.file.waitForFileDeletion();
 
-            this.spendeeExports = this.spendeeExports.filter(se => !se.fileName == info.fileName);
+            this.spendeeExports = this.spendeeExports.filter((se: ISpendeeExportInfo) => se.fileName !== info.fileName);
         },
-        async getExistingSpendeeExports() {
+        async getExisting() {
             // TODO: Can I use session storage to reduce the effort here.
             const homeDirectoryPath = await this.getHomeDirectoryPath();
             const budgeterDirectoryPath = `${homeDirectoryPath}/${constants.CONFIG_FOLDER_NAME}`;
 
             modules.directory.askForDirectoryContent(IpcSource.Index, budgeterDirectoryPath);
-            // TODO: Use function name.
-            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Asking For Directory Content: ${homeDirectoryPath}`);
+            RendererLoggingModule.logInfo(this.getExisting.name, `Asking For Directory Content: ${budgeterDirectoryPath}`);
 
-            const exportSaveDirectoryContent = await modules.directory.resolveDirectoryContent(IpcSource.Index);
-            RendererLoggingModule.logInfo("getExistingSpendeeExports", `Got Directory Content: ${exportSaveDirectoryContent}`);
+            const configFolderContents = await modules.directory.resolveDirectoryContent();
+            RendererLoggingModule.logInfo(this.getExisting.name, `Got Directory Content: ${budgeterDirectoryPath}`);
 
+            await this.getExistingBudgets(configFolderContents);
+            await this.getExistingSpendeeExports(configFolderContents);
+        },
+        async getExistingBudgets(saveDirectoryContent: string[]) {
+            const isBudget = (filePath: string): filePath is string => BudgetInfoValidator.IsBudget(filePath);
+            const parseBudgetInfo = (filePath: string): IBudgetInfo => BudgetInfoMapper.fromFilePath(filePath);
+
+            this.budgets = saveDirectoryContent
+                .filter<string>(isBudget)
+                .map<IBudgetInfo>(parseBudgetInfo);
+        },
+        async getExistingSpendeeExports(saveDirectoryContent: string[]) {
             const isExport = (filePath: string): filePath is string => SpendeeParserModule.checkFileIsExport(filePath);
             const getExportName = (filePath: string): string => SpendeeParserModule.getExportNameFromFileName(filePath);
             const parseExportInfo = (fileName: string): ISpendeeExportInfo => SpendeeParserModule.parseExportInfoFromFileName(fileName);
 
-            this.spendeeExports = exportSaveDirectoryContent
+            this.spendeeExports = saveDirectoryContent
                 .filter<string>(isExport)
                 .map<string>(getExportName)
                 .map<ISpendeeExportInfo>(parseExportInfo);

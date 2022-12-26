@@ -31,6 +31,8 @@ export default async function FileCreationRequestConsumer(logger: MainConsumerLo
 
         logger.logInfo(`Resolved: ${filePath}`);
     } catch (e) {
+        console.log(e);
+
         MainIpcModule.sendFailure({
             source,
             key,

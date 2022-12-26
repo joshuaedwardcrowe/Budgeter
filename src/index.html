@@ -62,19 +62,17 @@
 
         </div>
         <div v-else>
-            <h1>Budgets</h1>
+            <h2>Budgets</h2>
             <button @click="getNameForBudgetWithoutSpendeeExport">Add Export</button>
             <table v-if="budgets.length !== 0">
                 <tr>
                     <th>Name</th>
-                    <th>Cash Flow</th>
                     <th>Edit</th>
                 </tr>
                 <tr v-for="budget in budgets">
                     <td>{{budget.name}}</td>
-                    <td>{{budget.getCashFlow()}}</td>
                     <td>
-                        <button>Edit</button>
+                        <button @click="openBudget(budget)">Edit</button>
                     </td>
                 </tr>
             </table>
@@ -89,7 +87,7 @@
                 <p v-if="this.newBudgetExport === null">Cannot create a new budget without a Spendee Export as base.</p>
             </div>
 
-            <h1>Exports</h1>
+            <h2>Exports</h2>
             <button @click="askForSpendeeExport">Add Export</button>
             <table v-if="spendeeExports.length !== 0">
                 <tr>
